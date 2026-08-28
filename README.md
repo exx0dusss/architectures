@@ -125,6 +125,7 @@ plugins/
 .claude/agents/                             # maintainer-only audits of THIS repo
 .claude-plugin/marketplace.json             # what `claude plugin marketplace add` reads
 scripts/build-skill-refs.sh                 # regenerates reference/ — CI fails if stale
+scripts/check-consumer-leaks.sh             # ADR-0006 guard — no consumer names, paths or links
 ```
 
 Edit a stack doc, then run `sh scripts/build-skill-refs.sh` and commit the result. The
@@ -198,6 +199,11 @@ no consumer list.
 it here first, then reference it from both. Never promote automatically; a pattern earns its row
 by proving itself in a project. Promoting means rewriting the doctrine in general terms: drop the
 originating repo's name, its file paths, its dated findings. Keep the rule and the reason.
+
+`scripts/check-consumer-leaks.sh` gates the part of that a pattern can settle — a ticket key, a
+local path, a link out to another repo — and the `Consumer leaks` workflow runs it on every
+push and pull request. A vendor, a currency, a locale, a dated finding: those need the
+`consumer-leak-auditor` agent, which is judgment and stays manual.
 
 **Sync is the consumers' business.** They install the `arch-*` plugins and read doctrine straight
 out of them, so no blueprint doc is ever copied into a consumer repo and there is no mirror that

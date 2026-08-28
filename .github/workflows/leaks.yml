@@ -1,0 +1,24 @@
+name: Consumer leaks
+
+# The blueprint is independent of its consumers (ADR-0006). That principle was
+# enforced by memory alone until this guard: the `consumer-leak-auditor` agent
+# runs only when someone thinks to invoke it, and the leaks that reached the
+# public repo were the ones nobody thought to look for. This checks the subset
+# a pattern can settle; the agent still owns the judgment.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  leaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check for consumer-specific detail
+        run: sh scripts/check-consumer-leaks.sh
