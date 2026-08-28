@@ -1,0 +1,24 @@
+name: Plugin versions
+
+# The marketplace manifest must never advertise a version that does not exist.
+# When it does, a consumer's arch-sync-check.sh reports BEHIND forever while
+# `claude plugin update` correctly answers "already at the latest version" —
+# an alarm that cannot be cleared from either end. This guard exists because
+# that shipped once.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check advertised versions against plugin manifests
+        run: sh scripts/check-plugin-versions.sh

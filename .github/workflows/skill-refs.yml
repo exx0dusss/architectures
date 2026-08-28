@@ -1,0 +1,23 @@
+name: Skill refs
+
+# The arch-* skills ship inside the arch-core plugin and read their reference
+# material from plugins/arch-core/reference/, which is generated from the stack
+# docs and contributing/. This guard fails the build when a source doc was edited
+# without regenerating, so a consumer can never receive doctrine that lags the repo.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check bundled reference is current
+        run: sh scripts/build-skill-refs.sh --check

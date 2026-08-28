@@ -1,0 +1,23 @@
+name: Decision log
+
+# decisions/ and DECISIONS.md must stay in step: every ADR indexed, every
+# supersede chain bidirectional, every ADR-NNNN reference resolving, no
+# Proposed decision left undecided. A decision log that has rotted is worse
+# than none — it reads as history while pointing at files that moved.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  decisions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Check the decision log
+        run: sh scripts/check-decisions.sh --strict
