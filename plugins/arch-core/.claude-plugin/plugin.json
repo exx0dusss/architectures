@@ -1,7 +1,7 @@
 {
   "name": "arch-core",
   "displayName": "Architectures \u2014 Core Doctrine",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "Stack-agnostic architecture skills for repos built on the exx0dusss/architectures blueprint, the architecture-decision (ADR) workflow, plus the blueprint drift audit. Each skill routes to the bundled reference for the detected stack.",
   "author": {
     "name": "exx0dusss",
