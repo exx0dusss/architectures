@@ -39,6 +39,24 @@ read those instead — a consumer's local instantiation outranks the blueprint.
 - **Every suspending component needs a real skeleton** matching the final layout. A bare spinner in place of a list is not an acceptable fallback.
 - **Render enums through the shared badge component**, with the label and variant maps living next to the enum in its schema file, so one enum has one rendering everywhere.
 
+## Scroll affordance
+
+- Primary persistent content — page bodies, tables, long lists, logs, chat history, and important
+  side panels — keeps native scrollbar affordance. Do not hide a scrollbar because it looks noisy.
+- Secondary gesture-driven strips may hide the scrollbar only when a replacement cue exists:
+  clipped content, a position-aware edge fade, arrows, dots, or equivalent controls. Preserve touch,
+  wheel, keyboard, focus-into-view, and screen-reader access.
+- `overflow: auto` / `overflow-y-auto` is the default for reachable content. `overflow: hidden` is
+  for known clipping — media wells, masks, animation panels, rounded shells, and bounded controls —
+  not for suppressing unknown overflow.
+- Horizontal overflow must be discoverable. A partial card or chip counts as a cue; a primary table
+  with hidden scrollbar and no other cue does not.
+- Edge fades must follow scroll position. At a scroll boundary, first/last complete item stays fully
+  clear; fade only content that is actually clipped. Static masks that fade both edges regardless of
+  overflow or position are not scroll affordances.
+- Avoid nested scroll containers. One owner per axis; reserve and paint scrollbar gutter wherever
+  header/body alignment depends on it.
+
 ## Red flags — stop and re-read the reference
 
 - A hardcoded colour class (`text-white`, `bg-white/[0.xx]`, `text-purple-400`, `bg-slate-500`) → use a semantic token (`text-foreground`, `bg-card`, `border-border`, …)
@@ -53,3 +71,6 @@ read those instead — a consumer's local instantiation outranks the blueprint.
 - `truncate` on a child of a centred column (`flex flex-col items-center`) or inside a flex/grid cell with no `min-w-0` → nothing bounds its width, so it never ellipses and the text spills out both sides. See the text-overflow section of the stack's `components.md`
 - A UI primitive imported from anywhere but `components/ui/` → fix the import
 - **(TanStack Start)** `asChild` on `Button` → Base UI uses the `render` prop: `<Button render={<Link to="/" />} nativeButton={false}>`
+- A primary scroll container hides its native scrollbar without a persistent replacement cue → keep
+  the platform affordance or add an equivalent.
+- A scroll edge uses a static fade/mask → make edge state position-aware and boundary-safe.

@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Opinionated, battle-tested software architectures per stack, delivered as Claude Code plugins.",
-    "version": "1.7.0"
+    "version": "1.8.0"
   },
   "plugins": [
     {
       "name": "arch-core",
       "displayName": "Architectures \u2014 Core Doctrine",
       "description": "Stack-agnostic architecture skills (services, state, UI, auth, forms, backend modules), the arch-decision ADR workflow, the arch-contribute contribution doctrine, the arch-drift audit, and the init workflow. Required by every stack plugin.",
-      "version": "1.7.0",
+      "version": "1.8.0",
       "source": "./plugins/arch-core"
     },
     {
