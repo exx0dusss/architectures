@@ -47,6 +47,30 @@ git. Then run `/arch-init` once for the pieces a plugin cannot touch — the con
 The skills also work through the `skills` CLI for non-plugin setups:
 `npx skills add exx0dusss/architectures`.
 
+### Codex and general Agent Skills
+
+The shared `SKILL.md` files are the portable layer. Install them through the general Agent Skills
+CLI for Codex or another supported agent:
+
+```bash
+npx skills add exx0dusss/architectures --agent codex
+```
+
+This installs skills only. Claude-specific agents, hooks, and settings stay Claude-specific.
+
+The repo also contains a native Codex marketplace at
+[`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json). Register it from the repo
+root, then install plugins through the Codex plugin UI:
+
+```bash
+codex plugin marketplace add .
+codex plugin marketplace list
+```
+
+Native Codex packages currently cover skill-bearing plugins: `arch-core`, `arch-nestjs-backend`,
+and `product-design`. `arch-nextjs` and `arch-tanstack-start` currently ship Claude agents only;
+their agent workflows need Codex-specific skill ports before claiming parity.
+
 ## Skills
 
 `arch-core` ships eight doctrine skills plus the init and promotion workflows. Each declares triggers, carries a
@@ -141,6 +165,8 @@ plugins/
   arch-core/agents/arch-drift.md            # consumer-side drift audit
   arch-<stack>/{agents,hooks,scripts}/      # per-stack tooling
   product-design/{skills,agents,reference}/   # stack-agnostic product-building workflow
+.agents/plugins/marketplace.json             # Codex plugin marketplace
+plugins/*/.codex-plugin/plugin.json          # Codex manifests inside skill-bearing plugins
 .claude/agents/                             # maintainer-only audits of THIS repo
 .claude-plugin/marketplace.json             # what `claude plugin marketplace add` reads
 scripts/build-skill-refs.sh                 # regenerates reference/ — CI fails if stale

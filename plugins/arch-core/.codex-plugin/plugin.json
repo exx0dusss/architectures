@@ -1,0 +1,34 @@
+{
+  "name": "arch-core",
+  "version": "1.9.0",
+  "description": "Stack-agnostic architecture doctrine, decision workflow, contribution workflow, and blueprint drift guidance.",
+  "author": {
+    "name": "exx0dusss",
+    "url": "https://github.com/exx0dusss"
+  },
+  "homepage": "https://github.com/exx0dusss/architectures",
+  "repository": "https://github.com/exx0dusss/architectures",
+  "license": "MIT",
+  "keywords": [
+    "architecture",
+    "nextjs",
+    "tanstack-start",
+    "nestjs",
+    "conventions"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Architectures — Core Doctrine",
+    "shortDescription": "Architecture doctrine and workflows",
+    "longDescription": "Stack-agnostic architecture skills for services, state, UI, auth, forms, backend modules, decisions, contributions, initialization, and pattern promotion.",
+    "developerName": "exx0dusss",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/exx0dusss/architectures",
+    "defaultPrompt": [
+      "Apply architecture doctrine to this change"
+    ]
+  }
+}

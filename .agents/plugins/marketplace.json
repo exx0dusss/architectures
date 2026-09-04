@@ -1,0 +1,44 @@
+{
+  "name": "architectures",
+  "interface": {
+    "displayName": "Architectures"
+  },
+  "plugins": [
+    {
+      "name": "arch-core",
+      "source": {
+        "source": "local",
+        "path": "./plugins/arch-core"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "arch-nestjs-backend",
+      "source": {
+        "source": "local",
+        "path": "./plugins/arch-nestjs-backend"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "product-design",
+      "source": {
+        "source": "local",
+        "path": "./plugins/product-design"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Design"
+    }
+  ]
+}

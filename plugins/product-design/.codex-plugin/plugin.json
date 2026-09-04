@@ -1,0 +1,33 @@
+{
+  "name": "product-design",
+  "version": "1.1.0",
+  "description": "High-fidelity product prototyping workflow with visual-language and component-source guidance.",
+  "author": {
+    "name": "exx0dusss",
+    "url": "https://github.com/exx0dusss"
+  },
+  "homepage": "https://github.com/exx0dusss/architectures/tree/main/product-design",
+  "repository": "https://github.com/exx0dusss/architectures",
+  "license": "MIT",
+  "keywords": [
+    "product-design",
+    "prototyping",
+    "ui",
+    "visual-design"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Architectures — Product Design",
+    "shortDescription": "High-fidelity product prototyping",
+    "longDescription": "Build and review high-fidelity product pages inside real application structure, with realistic states, replaceable integration seams, and rendered visual verification.",
+    "developerName": "exx0dusss",
+    "category": "Design",
+    "capabilities": [
+      "Write"
+    ],
+    "websiteURL": "https://github.com/exx0dusss/architectures/tree/main/product-design",
+    "defaultPrompt": [
+      "Prototype this product surface with strong visual hierarchy"
+    ]
+  }
+}
