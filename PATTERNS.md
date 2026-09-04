@@ -2,8 +2,8 @@
 
 One row per pattern doc in this repo, so every doc has an owner and a status.
 
-**This repo is the source of truth.** Every doc here is authored here. Consumers install the
-`arch-*` plugins and read doctrine from them — nothing is copied into a consumer repo, so there is
+**This repo is the source of truth.** Every doc here is authored here. Consumers install its
+plugins and read doctrine from them — nothing is copied into a consumer repo, so there is
 no mirror to drift and nothing here points at a downstream project. When a pattern proves itself
 in a project and is **general** — nothing of that project survives the rewrite — promote it here
 first and reference it from both sides (ADR-0012). The promoting project decides when; this repo
@@ -48,6 +48,19 @@ per-stack sections below — a skill is never a second copy of doctrine.
 | arch-forms | `plugins/arch-core/skills/arch-forms/SKILL.md` | stable | ADR-0005 |
 | arch-modules | `plugins/arch-core/skills/arch-modules/SKILL.md` | stable | ADR-0005 |
 | promote-pattern | `plugins/arch-core/skills/promote-pattern/SKILL.md` | stable | ADR-0005, ADR-0006 |
+
+## Product design (all frontend stacks)
+
+Shipped in the `product-design` plugin. Source docs express reusable judgment; skill and agent apply
+it against each consumer's own design system and product context.
+
+| Pattern | File | Status | Decisions |
+|---------|------|--------|-----------|
+| Product prototyping | `product-design/prototyping.md` | stable | ADR-0013 |
+| Component source routing | `product-design/component-sources.md` | stable | ADR-0013 |
+| Visual language | `product-design/visual-language.md` | stable | ADR-0013 |
+| product-prototype | `plugins/product-design/skills/product-prototype/SKILL.md` | stable | ADR-0013 |
+| product-design-review | `plugins/product-design/agents/product-design-review.md` | stable | ADR-0013 |
 
 ## Contribution doctrine (all stacks)
 

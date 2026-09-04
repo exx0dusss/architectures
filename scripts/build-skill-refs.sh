@@ -1,12 +1,10 @@
 #!/bin/sh
-# build-skill-refs.sh — regenerate the reference docs bundled with the arch-core plugin.
+# build-skill-refs.sh — regenerate reference docs bundled with plugins.
 #
-# The source directories — the stacks (nextjs/, tanstack-start/, nestjs-backend/) and the
-# stack-agnostic contributing/ — remain the single source of truth and stay browsable on
-# GitHub. The arch-* skills ship inside a plugin, so they need those docs on disk next to
-# them; this script copies them into
-#
-#   plugins/arch-core/reference/<dir>/
+# Root source directories remain the single source of truth and stay browsable on GitHub.
+# Skills ship inside plugins, so they need those docs on disk next to them; this script copies
+# architecture and contribution doctrine into arch-core, plus product-design doctrine into its
+# own plugin.
 #
 # Whole files only — no slicing, no concatenation — so the copy is trivially verifiable
 # and a doc edit can never half-land. Run after editing any source doc. CI runs it and
@@ -21,10 +19,17 @@ set -eu
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 STACKS="nextjs tanstack-start nestjs-backend"
 SHARED="contributing"
-DEST="$ROOT/plugins/arch-core/reference"
+CORE_DEST="$ROOT/plugins/arch-core/reference"
+PRODUCT_DEST="$ROOT/plugins/product-design/reference"
 
 CHECK=0
-[ "${1:-}" = "--check" ] && CHECK=1 && DEST=$(mktemp -d)
+if [ "${1:-}" = "--check" ]; then
+    CHECK=1
+    TMP=$(mktemp -d)
+    CORE_DEST="$TMP/arch-core"
+    PRODUCT_DEST="$TMP/product-design"
+fi
+DEST="$CORE_DEST"
 
 for stack in $STACKS; do
     src="$ROOT/$stack"
@@ -63,7 +68,7 @@ for dir in $SHARED; do
     done
 done
 
-cat > "$DEST/README.md" <<'EOF'
+cat > "$CORE_DEST/README.md" <<'EOF'
 # Bundled reference
 
 **Generated — do not edit.** Every file here is a verbatim copy of a stack doc or a
@@ -78,16 +83,30 @@ These copies exist because the `arch-*` skills ship inside the `arch-core` plugi
 be able to read their reference material from the plugin's own directory.
 EOF
 
+rm -rf "$PRODUCT_DEST"
+mkdir -p "$PRODUCT_DEST"
+cp "$ROOT"/product-design/*.md "$PRODUCT_DEST/"
+cat > "$PRODUCT_DEST/README.md" <<'EOF'
+# Bundled product-design reference
+
+**Generated — do not edit.** Files here are verbatim copies of `product-design/*.md`, produced by
+`scripts/build-skill-refs.sh`. Edit root source and regenerate.
+EOF
+
 if [ "$CHECK" -eq 1 ]; then
-    if diff -r "$ROOT/plugins/arch-core/reference" "$DEST" >/dev/null 2>&1; then
+    FAIL=0
+    diff -r "$ROOT/plugins/arch-core/reference" "$CORE_DEST" >/dev/null 2>&1 || FAIL=1
+    diff -r "$ROOT/plugins/product-design/reference" "$PRODUCT_DEST" >/dev/null 2>&1 || FAIL=1
+    if [ "$FAIL" -eq 0 ]; then
         echo "skill refs: IN SYNC"
-        rm -rf "$DEST"
+        rm -rf "$TMP"
     else
         echo "skill refs: STALE — run 'sh scripts/build-skill-refs.sh' and commit" >&2
-        diff -r "$ROOT/plugins/arch-core/reference" "$DEST" || true
-        rm -rf "$DEST"
+        diff -r "$ROOT/plugins/arch-core/reference" "$CORE_DEST" || true
+        diff -r "$ROOT/plugins/product-design/reference" "$PRODUCT_DEST" || true
+        rm -rf "$TMP"
         exit 1
     fi
 else
-    echo "skill refs: regenerated into plugins/arch-core/reference/"
+    echo "skill refs: regenerated into plugin reference directories"
 fi

@@ -1,8 +1,11 @@
 # Architectures
 
-Opinionated, battle-tested software architectures per stack/framework.
+Personal engineering playbook: opinionated, battle-tested software architecture and product-building
+doctrine delivered as reusable plugins.
 
-Each architecture is a **reusable blueprint** — not tied to a specific project. Pick one based on your stack and go.
+Architecture remains one collection. Adjacent collections earn their place when docs encode reusable
+judgment and skills or agents turn that judgment into repeatable work. Consumer-specific product
+facts stay downstream.
 
 ## Frontend
 
@@ -35,6 +38,7 @@ claude plugin install arch-nextjs@architectures --scope project
 | `arch-nextjs` | Next.js agents, hooks, settings template |
 | `arch-tanstack-start` | TanStack Start agents, hooks, settings template |
 | `arch-nestjs-backend` | NestJS doctrine + module scaffolding and audit agents |
+| `product-design` | Product prototyping skill, visual-language doctrine, rendered-page review agent |
 
 `--scope project` writes to `.claude/settings.json`, so the whole team picks the plugin up from
 git. Then run `/arch-init` once for the pieces a plugin cannot touch — the consumer's own
@@ -83,6 +87,19 @@ Each stack plugin ships Claude Code agents in `plugins/arch-<stack>/agents/`:
 | `unit-test` | Generate tests for service files | Yes |
 | `msw-mock` | Generate MSW mock handlers | Yes |
 
+## Product design
+
+`product-design` applies beyond one stack. Its `product-prototype` skill builds high-fidelity
+application pages inside real product structure, using replaceable integration seams and rendered
+visual verification. Root [`product-design/`](./product-design/) docs hold source doctrine; plugin
+bundles generated copies. `product-design-review` supplies independent visual judgment before a
+variant is accepted.
+
+Local design systems remain authoritative. Before composing a major primitive, workflow routes to
+its provider skill and MCP/docs, then checks local wrapper and existing usage. Plugin sharpens
+hierarchy, composition, density, state coverage, and verification without imposing one product's
+tokens or component names on another.
+
 ## Staying in sync
 
 Two questions, answered separately, because version equality is not sync.
@@ -114,7 +131,8 @@ and `stack-parity-auditor` (does one stack have a capability its peer is owed?).
 ## Repo layout
 
 ```
-nextjs/  tanstack-start/  nestjs-backend/   # the docs — source of truth, browsable here
+nextjs/  tanstack-start/  nestjs-backend/   # architecture docs — source of truth
+product-design/                              # product-design doctrine — source of truth
 DECISIONS.md  decisions/                  # the decision timeline + one ADR each
 plugins/
   arch-core/
@@ -122,6 +140,7 @@ plugins/
     reference/<stack>/*.md                  # GENERATED verbatim copies of the stack docs
   arch-core/agents/arch-drift.md            # consumer-side drift audit
   arch-<stack>/{agents,hooks,scripts}/      # per-stack tooling
+  product-design/{skills,agents,reference}/   # stack-agnostic product-building workflow
 .claude/agents/                             # maintainer-only audits of THIS repo
 .claude-plugin/marketplace.json             # what `claude plugin marketplace add` reads
 scripts/build-skill-refs.sh                 # regenerates reference/ — CI fails if stale
