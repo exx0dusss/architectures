@@ -10,6 +10,7 @@ rejected on the way. A doc without its decision is a rule nobody can safely undo
 
 | ID | Date | Decision | Status | Links |
 |----|------|----------|--------|-------|
+| [0013](./decisions/0013-expand-beyond-architecture.md) | 2026-09-04 | Expand marketplace from architecture blueprints to engineering playbook collections | Accepted | `product-design/`, `plugins/product-design/` |
 | [0012](./decisions/0012-admit-agents-on-generality.md) | 2026-08-20 | Admit an agent or skill on generality, not on a second consumer | Accepted | `plugins/arch-core/skills/promote-pattern/SKILL.md` |
 | [0011](./decisions/0011-scope-decision-approval.md) | 2026-08-19 | Scope who approves a decision by cost, cross-team impact and security | Accepted | — |
 | [0010](./decisions/0010-prefer-existing-tooling-for-guards.md) | 2026-08-19 | Prefer an existing tool over a bespoke guard, and make every guard state its reason | Accepted | `contributing/comments.md`, `scripts/check-decisions.sh` |

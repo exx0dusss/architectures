@@ -5,8 +5,8 @@
     "url": "https://github.com/exx0dusss"
   },
   "metadata": {
-    "description": "Opinionated, battle-tested software architectures per stack, delivered as Claude Code plugins.",
-    "version": "1.8.0"
+    "description": "Opinionated engineering doctrine and reusable product-building workflows, delivered as Claude Code plugins.",
+    "version": "1.9.0"
   },
   "plugins": [
     {
@@ -36,6 +36,13 @@
       "description": "The NestJS DDD modular-monolith blueprint, with module scaffolding, audit agents, doctrine hooks, and a settings template.",
       "version": "1.2.0",
       "source": "./plugins/arch-nestjs-backend"
+    },
+    {
+      "name": "product-design",
+      "displayName": "Architectures \u2014 Product Design",
+      "description": "Product prototyping skill, visual-language doctrine, and rendered-page design review for high-fidelity application UI.",
+      "version": "1.1.0",
+      "source": "./plugins/product-design"
     }
   ]
 }
