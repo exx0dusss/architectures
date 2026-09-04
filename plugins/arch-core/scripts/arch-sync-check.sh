@@ -54,7 +54,16 @@ OUT_DIR=".claude"
 OUT="$OUT_DIR/blueprint-sync.json"
 SETTINGS="$OUT_DIR/settings.json"
 
-ALL_PLUGINS="arch-core arch-nextjs arch-tanstack-start arch-nestjs-backend"
+MANIFEST="$HOME/.claude/plugins/marketplaces/$MARKETPLACE_NAME/.claude-plugin/marketplace.json"
+[ -f "$MANIFEST" ] || { echo "marketplace manifest not found: $MANIFEST" >&2; exit 2; }
+
+# Discover every plugin this marketplace advertises. The marketplace now carries
+# collections beyond arch-*, so a hardcoded architecture list silently omits them.
+ALL_PLUGINS=$(python3 - "$MANIFEST" <<'PY'
+import json, sys
+print(" ".join(plugin["name"] for plugin in json.load(open(sys.argv[1]))["plugins"]))
+PY
+)
 
 # Which plugins are enabled FOR THIS PROJECT. The plugin cache is shared across
 # every repo on the machine, so scanning it alone reports plugins this repo
@@ -88,7 +97,6 @@ installed_version() {
 }
 
 # Advertised version = what the marketplace manifest currently declares.
-MANIFEST="$HOME/.claude/plugins/marketplaces/$MARKETPLACE_NAME/.claude-plugin/marketplace.json"
 advertised_version() {
     [ -f "$MANIFEST" ] || return 1
     sed -n "/\"name\": *\"$1\"/,/}/p" "$MANIFEST" |
@@ -127,7 +135,7 @@ for plugin in $ENABLED; do
 done
 
 if [ -z "$ROWS" ]; then
-    echo "No arch-* plugins enabled here. Run /arch-init, or:"
+    echo "No marketplace plugins enabled here. Install one, or:"
     echo "  claude plugin marketplace add $MARKETPLACE"
     exit 0
 fi
