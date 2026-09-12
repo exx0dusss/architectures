@@ -4,7 +4,7 @@
 contribution doctrine doc from the repository root, produced by
 `scripts/build-skill-refs.sh`.
 
-Edit the source (`nextjs/`, `tanstack-start/`, `nestjs-backend/`, `contributing/`) and re-run
+Edit the source (`nextjs/`, `tanstack-start/`, `nestjs-backend/`, `contributing/`, `agent-workflows/`) and re-run
 the script.
 Edits made here are overwritten and will fail CI.
 

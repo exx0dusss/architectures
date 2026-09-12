@@ -20,14 +20,15 @@ The Next.js architecture had separate `queries.ts` (server-only fetch with `cach
 - GET server functions replace `queries.ts`
 - POST server functions replace `actions.ts`
 - No need for `"server-only"` import or `"use server"` directive — `createServerFn` handles it
-- No need for `safeAction` wrapper — replaced by `safeServerFn` which wraps `createServerFn` handlers
+- Keep `createServerFn` visible to the compiler; use middleware for shared error handling.
+  A handler helper is not a custom factory that hides the server-function boundary.
 
 ---
 
 ## 1. `{resource}.schema.ts` — DTO Definitions
 
 ```typescript
-import { z } from "zod";
+import * as z from "zod";
 import { createSchemaFactory, identityTranslate, type TranslateFn } from "~/i18n/zod";
 
 // ── Enums (at the TOP) ──────────────────────────────────────────
@@ -83,7 +84,7 @@ export type {Resource} = z.infer<typeof {resource}Schema>;
 ## 2. `{resource}.api-schema.ts` — Request Schemas
 
 ```typescript
-import { z } from "zod";
+import * as z from "zod";
 import {
   workspacePathParamsSchema,
   workspaceHeaderSchema,

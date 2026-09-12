@@ -1,7 +1,7 @@
 {
   "name": "arch-nextjs",
   "displayName": "Architectures — Next.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Scaffolding and audit agents for the Next.js App Router blueprint: service and page scaffolds, architecture review, colour-token and dependency audits, OpenAPI checks, MSW mocks.",
   "author": {
     "name": "exx0dusss",

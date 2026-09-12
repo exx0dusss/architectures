@@ -12,9 +12,9 @@ Read-only review. Judge rendered result, not component names or DOM assertions.
 ## Evidence
 
 1. Read consumer instruction index and product/design docs.
-2. Read `$CLAUDE_PLUGIN_ROOT/reference/visual-language.md`,
-   `$CLAUDE_PLUGIN_ROOT/reference/prototyping.md`, and
-   `$CLAUDE_PLUGIN_ROOT/reference/component-sources.md`.
+2. Read [visual language](../reference/visual-language.md),
+   [prototyping](../reference/prototyping.md), and
+   [component sources](../reference/component-sources.md).
 3. Inspect neighboring accepted pages, tokens, semantic components, and provider evidence. For a
    questioned major primitive, load provider skill and query its MCP/docs before judging composition.
 4. Obtain screenshots for every supplied variant at wide and narrow viewports. If screenshots do

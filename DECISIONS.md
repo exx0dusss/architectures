@@ -10,6 +10,7 @@ rejected on the way. A doc without its decision is a rule nobody can safely undo
 
 | ID | Date | Decision | Status | Links |
 |----|------|----------|--------|-------|
+| [0014](./decisions/0014-load-conventions-by-task.md) | 2026-09-12 | Load conventions by task and owning workspace | Accepted | supersedes 0004 |
 | [0013](./decisions/0013-expand-beyond-architecture.md) | 2026-09-04 | Expand marketplace from architecture blueprints to engineering playbook collections | Accepted | `product-design/`, `plugins/product-design/` |
 | [0012](./decisions/0012-admit-agents-on-generality.md) | 2026-08-20 | Admit an agent or skill on generality, not on a second consumer | Accepted | `plugins/arch-core/skills/promote-pattern/SKILL.md` |
 | [0011](./decisions/0011-scope-decision-approval.md) | 2026-08-19 | Scope who approves a decision by cost, cross-team impact and security | Accepted | — |
@@ -19,7 +20,7 @@ rejected on the way. A doc without its decision is a rule nobody can safely undo
 | [0007](./decisions/0007-rbac-names-follow-the-implementation.md) | 2026-08-18 | Name the RBAC decorator and guard after the working implementation | Accepted | |
 | [0006](./decisions/0006-blueprint-independent-of-consumers.md) | 2026-08-17 | Make the blueprint independent of its consumers | Accepted | |
 | [0005](./decisions/0005-ship-doctrine-as-plugins.md) | 2026-08-17 | Distribute doctrine as Claude Code plugins instead of copied files | Accepted | |
-| [0004](./decisions/0004-converged-agentic-doc-structure.md) | 2026-08-07 | Prescribe one instruction layout for consumer repos | Accepted | |
+| [0004](./decisions/0004-converged-agentic-doc-structure.md) | 2026-08-07 | Prescribe one instruction layout for consumer repos | Superseded | superseded by 0014 |
 | [0003](./decisions/0003-nextjs-maintenance-mode.md) | 2026-08-07 | Freeze the Next.js stack at maintenance; new doctrine lands in TanStack Start | Accepted | |
 | [0002](./decisions/0002-chrome-token-model.md) | 2026-08-07 | Give chrome its own always-consistent token group | Accepted | supersedes 0001 |
 | [0001](./decisions/0001-dark-chrome-surface-guidance.md) | 2026-04-07 | Document dark chrome as an inverse-token surface pattern | Superseded | superseded by 0002 |

@@ -44,32 +44,25 @@ claude plugin install arch-nextjs@architectures --scope project
 git. Then run `/arch-init` once for the pieces a plugin cannot touch — the consumer's own
 `AGENTS.md` index, permissions, component registry, and third-party skills.
 
-The skills also work through the `skills` CLI for non-plugin setups:
-`npx skills add exx0dusss/architectures`.
+### Portable runtime installation
 
-### Codex and general Agent Skills
+Use native plugins for complete skill + reference packages. Claude installs through its plugin
+marketplace. Codex uses [the native marketplace](./.agents/plugins/marketplace.json) registered
+from this repository, then its available plugin installation interface. Check actual host help
+rather than assuming CLI/UI commands are identical across versions.
 
-The shared `SKILL.md` files are the portable layer. Install them through the general Agent Skills
-CLI for Codex or another supported agent:
+Codex packages cover core doctrine/drift/contract/guard workflows, TanStack review/service
+integration, Nest migration/backend reviews, and product prototyping/rendered review. These are
+skill entrypoints to shared packaged workflows, not Claude agents or hooks magically running in
+another host. Next.js agent portability is not provided; its stack remains maintenance-only.
 
-```bash
-npx skills add exx0dusss/architectures --agent codex
-```
+Each entrypoint links its canonical workflow. Stack packages bundle their reference docs so
+isolated installs resolve those links without guessing another plugin's cache location. Generated
+copies remain governed by source docs and build-skill-refs.sh.
 
-This installs skills only. Claude-specific agents, hooks, and settings stay Claude-specific.
-
-The repo also contains a native Codex marketplace at
-[`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json). Register it from the repo
-root, then install plugins through the Codex plugin UI:
-
-```bash
-codex plugin marketplace add .
-codex plugin marketplace list
-```
-
-Native Codex packages currently cover skill-bearing plugins: `arch-core`, `arch-nestjs-backend`,
-and `product-design`. `arch-nextjs` and `arch-tanstack-start` currently ship Claude agents only;
-their agent workflows need Codex-specific skill ports before claiming parity.
+General skills installers may copy only skill folders and omit the references/agents they use.
+Verify installed reference paths before claiming that installation works; prefer native packages
+when the installer cannot retain the full package. Names in a cache are not proof of live loading.
 
 ## Skills
 
@@ -128,12 +121,24 @@ tokens or component names on another.
 
 Two questions, answered separately, because version equality is not sync.
 
-`arch-core` ships `scripts/arch-sync-check.sh`, which a consumer runs on itself. It reports
-whether each enabled plugin matches the version the marketplace advertises, **and** whether any
-project-level `.claude/agents/<name>.md` shadows a plugin agent of the same name. Project agents
-win, so a vendored copy silently disables the plugin's version — a repo can report every plugin
-`CURRENT` while the plugins do nothing at all. Results land in `.claude/blueprint-sync.json`;
-`--strict` exits non-zero for CI.
+`arch-core` ships `scripts/arch-sync-check.sh`, run inside the consumer checkout. It reads
+Claude's enabled settings and installation registry, resolves project/worktree scope, and checks
+installed manifests against the marketplace. A newer machine cache does not count as a project
+installation. `MISSING`, `INVALID`, `UNKNOWN`, `BEHIND`, and `AHEAD` remain distinct; `--strict`
+fails every non-current registration and every shadowed agent. No requested plugins is an empty
+report, not a fallback to unrelated machine caches.
+
+Inspection is read-only by default (`--check`). Use `--write` deliberately to save
+`.claude/blueprint-sync.json`; `--json` emits structured provenance. The report checks registered
+installations, **not live session loading**. Verify loaded capabilities in a fresh runtime session.
+The resolver currently supports `--runtime claude`; Codex registration needs its own resolver and
+must not be inferred from Claude caches. `--project PATH` selects the consumer checkout.
+
+Hook scripts consume PostToolUse JSON from stdin and return model-visible `additionalContext`.
+The shared transport source is `scripts/hook_reminder.py`; run
+`python3 scripts/build-hook-helpers.py` after editing it. Bundled copies keep each plugin
+self-contained. `python3 -m unittest discover -s scripts/tests -v` covers hook payloads and
+installation resolution; CI also verifies bundle equality. Hooks are advisory, not safety gates.
 
 What a script cannot judge, the `arch-drift` agent does: whether a forked agent is a stale
 ancestor or a real local patch, whether doctrine has been copied into always-loaded conventions,
@@ -177,37 +182,16 @@ Edit a stack doc, then run `sh scripts/build-skill-refs.sh` and commit the resul
 `Skill refs` workflow fails any PR where the two have diverged.
 Reverse a rule and you also write an ADR — see [Architecture decisions](#architecture-decisions).
 
-## Agentic doc structure (converged)
+## Agentic doc structure
 
-Consumer repos converge on one instruction layout so agents load the right context at the right time:
+[ADR-0014](./decisions/0014-load-conventions-by-task.md) makes loading task- and workspace-scoped.
+Keep CLAUDE.md as @AGENTS.md. Root/app indexes carry essential safety, ownership and explicit
+read-before-work pointers. Topic conventions and patterns load when needed; their directory
+name does not make them always-loaded. Preserve incident evidence behind links.
 
-```
-CLAUDE.md                     # exactly one line: @AGENTS.md
-AGENTS.md                     # the index — nothing else lives here:
-                              #   1. intent skill-mappings header (a `skills:` list
-                              #      mapping "task" → SKILL.md path in node_modules,
-                              #      generated/refreshed via `npx @tanstack/intent`)
-                              #   2. one @import line per docs/conventions/*.md file
-                              #   3. a "Related docs" list pointing at docs/patterns/
-docs/conventions/*.md         # ONE topic per file (stack, architecture, forms,
-                              #   overlays, data-loading, mutation-feedback, …) —
-                              #   always-loaded via @import; edit the source file,
-                              #   never duplicate content into the index
-docs/patterns/*.md            # load-before-work specs (page-layout, card,
-                              #   table-actions, …) — referenced from the index with
-                              #   a "read X first" trigger table, loaded on demand
-scripts/check-*.ts            # CI guard scripts for every mechanically-checkable
-                              #   convention (type scale, mutation feedback, …) —
-                              #   a convention without a guard is a suggestion
-```
-
-Rules of thumb:
-
-- **CLAUDE.md contains only `@AGENTS.md`** — the index is tool-agnostic; Claude-specific config stays in `.claude/`.
-- **The index imports, it never explains.** Each convention doc owns its topic; the index's job is routing (which doc, when).
-- **Import the project, skill the doctrine.** `docs/conventions/` is for what is specific to *this* repo — its real folder layout, commands, ports, safety rules. Generic blueprint doctrine (the service file contract, state layering, component layers and tokens, auth enforcement) belongs to the `arch-*` skills and loads on demand. Duplicating it into an always-loaded convention doc is what makes an index cost 10k+ tokens on every prompt.
-- **Patterns vs conventions:** conventions are always-on rules (short, imported); patterns are heavyweight specs an agent loads before touching that surface (referenced with an explicit "load before any X work" trigger).
-- **Guard what you can grep.** Every rule that reduces to a grep gets a `scripts/check-*.ts` CI guard and a mention in the convention doc it enforces.
+Read [context routing](./agent-workflows/context-routing.md) for mixed-stack ownership and host
+capability rules. Generic doctrine lives upstream; consumer conventions describe local choices
+and exceptions. Prefer an existing validation tool over a new custom guard.
 
 ## Architecture decisions
 
@@ -262,3 +246,7 @@ reference follows, and commit both.
 ## License
 
 MIT — see [LICENSE](./LICENSE).
+
+The Claude sync checker honors `CLAUDE_CONFIG_DIR` and registered marketplace install locations,
+including local marketplaces. Its report names both paths; registration remains distinct from
+live-session loading.

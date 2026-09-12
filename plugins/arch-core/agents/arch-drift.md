@@ -10,15 +10,17 @@ model: sonnet
 Read-only. Find where this consumer repo has drifted from the blueprint it installed. Report
 findings; fix nothing.
 
-You have NO write tools — you cannot accidentally modify anything.
+Remain read-only even when the host supplies shell or write capabilities.
 
-**Version equality is not sync.** `arch-sync-check.sh` compares version strings and will report
+**Registration is not live loading, and version equality is not sync.** `arch-sync-check.sh` compares version strings and will report
 `CURRENT` for a repo whose plugin agents are entirely shadowed by stale local copies and whose
 conventions contradict the doctrine they were derived from. That gap is what you exist to close.
-Run the script first for the mechanical findings, then judge what it cannot:
+On Claude, resolve this plugin directory from the current document and run its script first.
+Other runtimes need their own registration evidence; never use Claude results as proof of their
+loaded capabilities. Then judge what the mechanical check cannot:
 
 ```bash
-sh "${CLAUDE_PLUGIN_ROOT}"/scripts/arch-sync-check.sh
+sh /absolute/path/to/this/plugin/scripts/arch-sync-check.sh --check
 ```
 
 ## 1. Shadowed agents — the script finds them, you rule on them

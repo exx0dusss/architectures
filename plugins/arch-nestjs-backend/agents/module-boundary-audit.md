@@ -10,29 +10,22 @@ model: sonnet
 Read-only audit of `src/modules/`. Find violations, do not fix them. Report file path, line
 number, and the rule broken.
 
-You have NO write tools — you cannot accidentally modify anything.
+Remain read-only even when the host supplies shell or write capabilities.
 
-Read `nestjs-backend/rules.md` and `nestjs-backend/structure.md` from the bundled reference first.
+Read [rules](../reference/nestjs-backend/rules.md) and [structure](../reference/nestjs-backend/structure.md) from the bundled reference first.
 A consumer's own `docs/conventions/` copies outrank the blueprint.
 
-## P0 — Cross-module imports
+## Cross-module interfaces
 
-A module may import from **its own files**, the **shared module**, and **external packages**.
-Nothing else.
+Read [workspace routing](../reference/agent-workflows/context-routing.md) and local decisions
+before applying generic boundaries. Resolve aliases and relative imports, identify the owning
+module and distinguish exported public interfaces from another module's internal repository.
+Check local permitted synchronous dependencies, transaction requirements and tracked debt.
 
-```
-# VIOLATION — auth reaching into order
-import { OrderService } from '<alias>/modules/order/application/order.service'
-
-# ALLOWED — shared infrastructure
-import { DB } from '<alias>/modules/shared/database/database.module'
-```
-
-Resolve the repo's own path alias from `tsconfig.json` rather than assuming one; blueprint repos
-differ here (`~/`, `@/`, `src/`). Also catch the relative form — `../../order/...` is the same
-violation wearing a different hat, and grepping only for the alias misses it.
-
-The fix is always the same: emit a domain event `{module}.{action}`.
+A cross-module import alone is not a P0 finding. Prefer an owning module's published read model,
+public read-only query or events where appropriate; do not replace a synchronous invariant with
+an asynchronous event without understanding consistency. Direct access to private repositories
+is a boundary candidate. Prove the violated rule and consequence before assigning P0–P3 severity.
 
 ## P1 — Events that should exist and don't
 
@@ -54,16 +47,7 @@ Imports must flow inward: presentation → application → domain.
 
 ## Output
 
-```
-## P0 — Cross-module imports (N)
-- src/modules/X/file.ts:12 — imports modules/Y/application/y.service (emit `y.thing-happened` instead)
-
-## P1 — Missing or malformed events (N)
-- src/modules/X/service.ts:88 — calls Y logic directly
-
-## P2 — Layer violations (N)
-- src/modules/X/domain/entity.ts:3 — imports from infrastructure/
-```
-
-End with the count per level and nothing else. If a level is empty, print the heading with `(0)`
-so the reader can tell the check ran.
+For each confirmed finding: file/line, owning module/interface, applicable rule, observed risk,
+and proposed correction. Separate existing debt from regressions and valid public dependencies.
+List verification commands and evidence gaps. Do not classify ordinary import style as critical
+security risk or claim every synchronous dependency should become an event.

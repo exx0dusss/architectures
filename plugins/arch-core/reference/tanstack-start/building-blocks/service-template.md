@@ -16,7 +16,7 @@ Create all 6 files in `src/services/{service}/{resources}/` using the `x.z` conv
 ## 1. `{resources}.schema.ts`
 
 ```typescript
-import { z } from "zod";
+import * as z from "zod";
 import { createSchemaFactory, identityTranslate, type TranslateFn } from "~/i18n/zod";
 
 // ── Enums (at the TOP) ──────────────────────────────────────────
@@ -65,7 +65,7 @@ export type {Resource} = z.infer<typeof {resource}Schema>;
 ## 2. `{resources}.api-schema.ts`
 
 ```typescript
-import { z } from "zod";
+import * as z from "zod";
 import {
   workspacePathParamsSchema,
   workspaceHeaderSchema,

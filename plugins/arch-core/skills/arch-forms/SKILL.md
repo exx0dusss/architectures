@@ -6,6 +6,10 @@ stacks: [nextjs, tanstack-start]
 
 # Forms
 
+Before stack detection, read [owning-workspace routing](../../reference/agent-workflows/context-routing.md).
+Here `package.json` and local conventions mean the target's owning workspace, not necessarily
+repository root. Unsupported sibling stacks do not inherit this skill.
+
 **Applies only to repos built on the `exx0dusss/architectures` blueprint.** If this repo has no
 `docs/architecture/` directory and no `AGENTS.md` naming one of these stacks, this skill does not
 apply — stop and ignore it.

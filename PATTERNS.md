@@ -236,3 +236,9 @@ so it holds for one stack and must not be routed to the others.
 | Pattern | File | Status | Decisions |
 |---------|------|--------|-----------|
 | db-migration | `plugins/arch-nestjs-backend/skills/db-migration/SKILL.md` | stable | ADR-0012 |
+
+## Agent context routing
+
+| Pattern | Source | Decisions |
+|---|---|---|
+| Task-scoped conventions and owning-workspace detection | [Context routing](./agent-workflows/context-routing.md) | [0014](./decisions/0014-load-conventions-by-task.md) |

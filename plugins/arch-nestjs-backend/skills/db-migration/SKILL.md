@@ -17,7 +17,7 @@ what makes drift structurally impossible.
 Retire it rather than relying on discipline: point the `db:push` script at something that exits
 non-zero with the reason. A command that still runs will be run.
 
-`nestjs-backend/data-layer.md` is the doctrine. A repo with its own migrations doc outranks both
+[data-layer reference](../../reference/nestjs-backend/data-layer.md) is the doctrine. A repo with its own migrations doc outranks both
 on anything specific to that database.
 
 ## The everyday loop
@@ -25,7 +25,8 @@ on anything specific to that database.
 1. Edit the schema files.
 2. `db:generate --name <change>` — writes `NNNN_<change>.sql` and updates the snapshot under
    `migrations/meta/`.
-3. **Read the generated SQL.** Every time. Run the `migration-reviewer` agent on it — it derives
+3. **Read the generated SQL.** Every time. Use the [migration review workflow](../../agents/migration-reviewer.md) directly, or the
+   named agent when available — it derives
    which objects are hand-authored and must never be dropped.
 4. Commit the SQL in the **same** changeset as the schema edit.
 5. `db:migrate` locally. On deploy, migrations run before the app boots, under a Postgres advisory

@@ -9,7 +9,7 @@ model: sonnet
 
 Generate a new domain module following the four-layer DDD structure.
 
-Read `nestjs-backend/structure.md` and `nestjs-backend/rules.md` from the bundled reference
+Read [structure](../reference/nestjs-backend/structure.md) and [rules](../reference/nestjs-backend/rules.md) from the bundled reference
 before writing anything — the layer layout and the naming rules below are an index, not the
 authority. If the consumer repo has its own `docs/conventions/` copies, those outrank the
 blueprint.

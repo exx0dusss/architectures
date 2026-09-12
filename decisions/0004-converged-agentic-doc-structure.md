@@ -2,9 +2,9 @@
 id: 0004
 title: Prescribe one instruction layout for consumer repos
 date: 2026-08-07
-status: Accepted
+status: Superseded
 supersedes: []
-superseded_by: []
+superseded_by: [0014]
 tags: [agentic-docs, conventions, consumers]
 ---
 

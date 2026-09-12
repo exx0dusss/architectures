@@ -6,6 +6,10 @@ stacks: [nextjs, tanstack-start, nestjs-backend]
 
 # Service and data layer
 
+Before stack detection, read [owning-workspace routing](../../reference/agent-workflows/context-routing.md).
+Here `package.json` and local conventions mean the target's owning workspace, not necessarily
+repository root. Unsupported sibling stacks do not inherit this skill.
+
 **Applies only to repos built on the `exx0dusss/architectures` blueprint.** If this repo has no
 `docs/architecture/` directory and no `AGENTS.md` naming one of these stacks, this skill does not
 apply — stop and ignore it.
@@ -65,7 +69,7 @@ Enums go at the **top** of the schema file, before create/update/DTO schemas, in
 - **(TanStack Start)** `*.server.ts` statically imported from route or component code → keep it behind `createServerFn`
 - **(NestJS)** a module importing another module's service or repository → emit a `{module}.{action}` domain event
 - **(NestJS)** raw Drizzle query inside a service → go through the repository
-- **(NestJS)** money as a float → integers (kopecks); IDs are UUID v7; timestamps are `timestamptz` UTC
+- **(NestJS)** money as a float → integers in the configured minor unit; IDs are UUID v7; timestamps are `timestamptz` UTC
 
 ## Invalidation
 

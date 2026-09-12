@@ -6,6 +6,10 @@ stacks: [nestjs-backend]
 
 # Backend modules, events, and workers
 
+Before stack detection, read [owning-workspace routing](../../reference/agent-workflows/context-routing.md).
+Here `package.json` and local conventions mean the target's owning workspace, not necessarily
+repository root. Unsupported sibling stacks do not inherit this skill.
+
 **Applies only to repos built on the `exx0dusss/architectures` blueprint.** If this repo has no
 `@nestjs/core` in `package.json`, this skill does not apply — stop and ignore it.
 
@@ -32,7 +36,11 @@ For the data layer itself — repositories, schemas, transactions — use `arch-
 and permissions, use `arch-auth`. This skill owns the **boundaries between modules**, not what
 happens inside one.
 
-## The three rules everything else follows from
+## Default boundaries
+
+Apply explicit consumer decisions first. These rules describe the blueprint default, not proof
+that an existing consumer has no documented synchronous public interfaces. Treat unrecorded
+divergence as debt to investigate, not authorization for a mass event-driven rewrite.
 
 1. **Modules never import each other.** A module imports its own files, the shared module, and
    external packages. Nothing else. When module A needs something from module B, A emits or

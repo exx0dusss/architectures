@@ -18,7 +18,7 @@ set -eu
 
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 STACKS="nextjs tanstack-start nestjs-backend"
-SHARED="contributing"
+SHARED="contributing agent-workflows"
 CORE_DEST="$ROOT/plugins/arch-core/reference"
 PRODUCT_DEST="$ROOT/plugins/product-design/reference"
 
@@ -75,7 +75,7 @@ cat > "$CORE_DEST/README.md" <<'EOF'
 contribution doctrine doc from the repository root, produced by
 `scripts/build-skill-refs.sh`.
 
-Edit the source (`nextjs/`, `tanstack-start/`, `nestjs-backend/`, `contributing/`) and re-run
+Edit the source (`nextjs/`, `tanstack-start/`, `nestjs-backend/`, `contributing/`, `agent-workflows/`) and re-run
 the script.
 Edits made here are overwritten and will fail CI.
 
@@ -93,10 +93,22 @@ cat > "$PRODUCT_DEST/README.md" <<'EOF'
 `scripts/build-skill-refs.sh`. Edit root source and regenerate.
 EOF
 
+for stack in tanstack-start nestjs-backend; do
+    target="$ROOT/plugins/arch-$stack/reference"
+    [ "$CHECK" -eq 0 ] || target="$TMP/arch-$stack-reference"
+    rm -rf "$target"
+    mkdir -p "$target/agent-workflows"
+    cp -R "$CORE_DEST/$stack" "$target/$stack"
+    cp "$ROOT/agent-workflows/context-routing.md" "$target/agent-workflows/"
+done
+
 if [ "$CHECK" -eq 1 ]; then
     FAIL=0
     diff -r "$ROOT/plugins/arch-core/reference" "$CORE_DEST" >/dev/null 2>&1 || FAIL=1
     diff -r "$ROOT/plugins/product-design/reference" "$PRODUCT_DEST" >/dev/null 2>&1 || FAIL=1
+    for stack in tanstack-start nestjs-backend; do
+        diff -r "$ROOT/plugins/arch-$stack/reference" "$TMP/arch-$stack-reference" >/dev/null 2>&1 || FAIL=1
+    done
     if [ "$FAIL" -eq 0 ]; then
         echo "skill refs: IN SYNC"
         rm -rf "$TMP"
