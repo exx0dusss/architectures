@@ -1,7 +1,7 @@
 {
   "name": "arch-nestjs-backend",
   "displayName": "Architectures \u2014 NestJS Backend",
-  "version": "1.2.1",
+  "version": "1.3.0",
   "description": "The NestJS DDD modular-monolith blueprint: domain events, Drizzle repositories, CASL RBAC, BullMQ. Ships module scaffolding, boundary and compliance audit agents, doctrine hooks, and a settings template that bans drizzle-kit push.",
   "author": {
     "name": "exx0dusss",

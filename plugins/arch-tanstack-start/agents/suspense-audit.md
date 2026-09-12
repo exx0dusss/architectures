@@ -1,71 +1,24 @@
 ---
+name: suspense-audit
 model: haiku
-description: Scan for useQuery violations — useSuspenseQuery is the default
+description: Review critical versus optional query loading and actual Suspense/error boundary coverage.
 ---
 
-# Suspense Audit
+# Loading audit
 
-Read-only audit. Scan for `useQuery` usage where `useSuspenseQuery` should be used.
+Read-only. Read owning app instructions and [service query decision table](../reference/tanstack-start/services.md)
+plus [data-fetching doctrine](../reference/tanstack-start/data-fetching.md). Local loading
+exceptions win, including deferred/optional requests and nonblocking loader warm-up.
 
-## What to flag
+For each scoped query, trace whether its data is structural, optional/conditional, auth-gating,
+or background refresh. Then trace its actual loader, rendered leaf, loading UI and error boundary.
+useQuery, isLoading or isError alone is not a finding. Optional data may use all three; failure
+must remain distinguishable from genuine empty data when the product needs that distinction.
 
-### P0 — useQuery where useSuspenseQuery should be
+For structural data, verify Suspense and error boundaries cover the leaf without unnecessarily
+blocking ready chrome. A boundary may live in an ancestor. Do not require a loader to await data
+when local policy intentionally warms the cache without blocking.
 
-```typescript
-// VIOLATION
-const { data, isLoading, isError } = useQuery(queryOptions)
-
-// CORRECT
-const { data } = useSuspenseQuery(queryOptions)
-// wrapped in <Suspense fallback={<Skeleton />}>
-```
-
-Flag every `useQuery(` call. Note the file, line, and query key.
-
-### P1 — isLoading/isError patterns
-
-Components that check `isLoading` or `isError` from query results should use Suspense boundaries instead:
-
-```typescript
-// VIOLATION
-if (isLoading) return <Spinner />
-if (isError) return <ErrorMessage />
-
-// CORRECT — handled by Suspense + ErrorBoundary
-const { data } = useSuspenseQuery(...)
-```
-
-### P2 — Missing Suspense boundaries
-
-Components that use `useSuspenseQuery` but whose parent doesn't wrap them in `<Suspense>`:
-
-```typescript
-// Parent should have:
-<Suspense fallback={<ComponentSkeleton />}>
-  <DataComponent />
-</Suspense>
-```
-
-## Acceptable exceptions (do NOT flag)
-
-- **Auth state:** `useQuery` for session/auth checks that gate the entire app (can't Suspend on "is user logged in")
-- **Background polling:** Optional data refresh that shouldn't block render (e.g., notification counts)
-- **Optimistic UI previews:** Data that shows stale while updating
-
-When an exception is found, note it as "ACCEPTABLE: {reason}" rather than flagging.
-
-## Output format
-
-```
-## P0 — useQuery violations (N)
-- file:line — useQuery({queryKey}) → should be useSuspenseQuery
-
-## P1 — isLoading/isError patterns (N)
-- file:line — isLoading check → use Suspense boundary
-
-## P2 — Missing Suspense wrappers (N)
-- file:line — useSuspenseQuery without parent Suspense
-
-## Acceptable exceptions (N)
-- file:line — ACCEPTABLE: auth state management
-```
+Report confirmed consequences with file/line and governing rule, using P0–P3 consequence-based
+severity from [architecture review](arch-review.md). Note valid exceptions without counting them
+as violations. State unverified behavior and commands run; do not rewrite queries during audit.

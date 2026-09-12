@@ -10,7 +10,7 @@
 
 ## Data integrity
 
-4. **Prices in kopecks (integers).** `4999.00₴ = 499900`. Never use floats for money.
+4. **Prices in integer minor units.** Currency and unit conversion belong to the consumer contract. Never use floats for stored money.
 
 5. **UUIDs for all IDs.** UUID v7 (time-ordered) for primary keys. No auto-increment integers in API responses.
 
@@ -26,7 +26,7 @@
 
 10. **Idempotency-Key header on order creation and payment.** Check `idempotency_keys` table before processing. Return cached response on duplicate.
 
-11. **Webhook signature verification.** Always verify LiqPay SHA1 and Monobank HMAC before processing payment webhooks.
+11. **Webhook signature verification.** Verify each provider’s documented signature over the required original payload before side effects. Read the owning adapter and tests; do not infer an algorithm from a generic example.
 
 ## Architecture
 

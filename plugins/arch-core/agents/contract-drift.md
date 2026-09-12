@@ -7,10 +7,10 @@ model: sonnet
 
 # Contract drift audit
 
-Read-only. A backend and its clients agree by convention, not by compiler — nothing in CI fails
-when they diverge. Find the divergence; fix nothing.
+Read-only. Map existing contract checks and their blind spots before claiming divergence.
+Some links may be enforced while others remain manual. Find demonstrated mismatches; fix nothing.
 
-You have NO write tools — you cannot accidentally modify anything.
+Remain read-only even when the host supplies shell or write capabilities.
 
 **This is the one audit no per-app agent can do.** Every app-scoped agent sees one end of the
 chain: the backend's own reviewer sees DTOs, a client's `openapi-check` sees that client's schemas
@@ -39,18 +39,21 @@ say whether it has been met.
 
 ## What to check
 
-**Is the OpenAPI snapshot current?** Compare its mtime against the last commit touching the
-backend's DTOs and controllers. A snapshot older than the DTOs means every downstream artifact was
-generated from a stale contract, and every check below inherits that staleness.
+**Which links are checked?** Read the owning apps' instructions, package scripts and CI jobs.
+Build a coverage matrix: backend source → spec, spec → generated client, shared schemas → wire,
+and hand-written client → wire. Name each check and its blind spot.
 
-**Is each generated file current?** Older than the snapshot → stale. Both stale → the whole chain
-lags the backend, and the fix is one regeneration command, not a type-by-type reconciliation.
+**Are generated artifacts current?** Run the consumer's read-only comparison guard when present.
+Otherwise regenerate into a disposable directory with the pinned generator and compare bytes.
+A source→spec check and a spec→client check prove different links; neither substitutes for the
+other. Inspect commands first so an audit never overwrites source artifacts or touches production.
+If generation cannot safely run, report UNVERIFIED with the missing prerequisite. File mtime,
+checkout time, or a recent commit does not prove freshness or staleness.
 
 **Do the hand-written clients still match?** For each endpoint such a client calls, compare its
 interface against the backend DTO: missing fields, extra fields the backend no longer returns,
-wrong optionality, and — highest value — **type mismatches on money and identity**, where the
-doctrine is explicit. `nestjs-backend/rules.md` requires money as integer minor units and IDs as
-UUID v7, so a float price or a numeric id in a client type is a defect, not a style difference.
+wrong optionality, and — highest value — **type mismatches on money and identity**. Determine wire units, serialized types and identifiers from the backend
+contract and local rules; a display-unit conversion is not a wire mismatch by itself.
 
 **Does the shared contracts package agree with both sides?** It is consumed by more than one side
 by definition; a shape that disagrees with the backend breaks whichever side trusts it.
@@ -66,7 +69,8 @@ broken.
 
 ```
 ## BROKEN — the sync mechanism itself (N)
-## STALE — generated artifact older than its source (N)
+## STALE — regeneration differs from committed artifact (N)
+## UNVERIFIED — required comparison could not run (N)
 ## MISMATCH — client type disagrees with the backend DTO (N)
 - {client} User.id: number  ≠  {backend} UserDto.id: string (uuid)
 ## UNTYPED — endpoint called with no shared type at all (N)

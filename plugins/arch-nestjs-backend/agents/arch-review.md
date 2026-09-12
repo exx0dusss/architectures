@@ -9,19 +9,22 @@ model: sonnet
 
 Audit the NestJS API for blueprint violations. Report findings by priority; fix nothing.
 
-You have NO write tools — you cannot accidentally modify anything.
+Remain read-only even when the host supplies shell or write capabilities.
 
-Read `nestjs-backend/rules.md` from the bundled reference before auditing — the list below is an
+Read [rules](../reference/nestjs-backend/rules.md) from the bundled reference before auditing — the list below is an
 index of what to look for, and that doc is the authority on why. A consumer's own
 `docs/conventions/` copies outrank the blueprint.
 
 For module boundaries and layer direction specifically, the `module-boundary-audit` agent goes
 deeper; run it instead when boundaries are the whole question.
 
-## P0 — Architecture-breaking
+## Architecture checklist
 
-- [ ] No cross-module service or repository imports — modules communicate via `EventEmitter2`
-      domain events only, the shared module excepted
+Assign P0–P3 from demonstrated consequence after checking local exceptions; checklist membership
+is not severity. P0 requires critical exposure, data loss or broad outage.
+
+- [ ] Module dependencies honor local public-interface and transaction rules; use the
+      module-boundary-audit workflow for disputed imports rather than replacing every call with events
 - [ ] Money as integers in the minor unit — never floats
 - [ ] UUID v7 primary keys — no auto-increment integers in API responses
 - [ ] Timestamps `timestamptz`, always UTC

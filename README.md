@@ -44,32 +44,25 @@ claude plugin install arch-nextjs@architectures --scope project
 git. Then run `/arch-init` once for the pieces a plugin cannot touch — the consumer's own
 `AGENTS.md` index, permissions, component registry, and third-party skills.
 
-The skills also work through the `skills` CLI for non-plugin setups:
-`npx skills add exx0dusss/architectures`.
+### Portable runtime installation
 
-### Codex and general Agent Skills
+Use native plugins for complete skill + reference packages. Claude installs through its plugin
+marketplace. Codex uses [the native marketplace](./.agents/plugins/marketplace.json) registered
+from this repository, then its available plugin installation interface. Check actual host help
+rather than assuming CLI/UI commands are identical across versions.
 
-The shared `SKILL.md` files are the portable layer. Install them through the general Agent Skills
-CLI for Codex or another supported agent:
+Codex packages cover core doctrine/drift/contract/guard workflows, TanStack review/service
+integration, Nest migration/backend reviews, and product prototyping/rendered review. These are
+skill entrypoints to shared packaged workflows, not Claude agents or hooks magically running in
+another host. Next.js agent portability is not provided; its stack remains maintenance-only.
 
-```bash
-npx skills add exx0dusss/architectures --agent codex
-```
+Each entrypoint links its canonical workflow. Stack packages bundle their reference docs so
+isolated installs resolve those links without guessing another plugin's cache location. Generated
+copies remain governed by source docs and build-skill-refs.sh.
 
-This installs skills only. Claude-specific agents, hooks, and settings stay Claude-specific.
-
-The repo also contains a native Codex marketplace at
-[`.agents/plugins/marketplace.json`](./.agents/plugins/marketplace.json). Register it from the repo
-root, then install plugins through the Codex plugin UI:
-
-```bash
-codex plugin marketplace add .
-codex plugin marketplace list
-```
-
-Native Codex packages currently cover skill-bearing plugins: `arch-core`, `arch-nestjs-backend`,
-and `product-design`. `arch-nextjs` and `arch-tanstack-start` currently ship Claude agents only;
-their agent workflows need Codex-specific skill ports before claiming parity.
+General skills installers may copy only skill folders and omit the references/agents they use.
+Verify installed reference paths before claiming that installation works; prefer native packages
+when the installer cannot retain the full package. Names in a cache are not proof of live loading.
 
 ## Skills
 
@@ -189,37 +182,16 @@ Edit a stack doc, then run `sh scripts/build-skill-refs.sh` and commit the resul
 `Skill refs` workflow fails any PR where the two have diverged.
 Reverse a rule and you also write an ADR — see [Architecture decisions](#architecture-decisions).
 
-## Agentic doc structure (converged)
+## Agentic doc structure
 
-Consumer repos converge on one instruction layout so agents load the right context at the right time:
+[ADR-0014](./decisions/0014-load-conventions-by-task.md) makes loading task- and workspace-scoped.
+Keep CLAUDE.md as @AGENTS.md. Root/app indexes carry essential safety, ownership and explicit
+read-before-work pointers. Topic conventions and patterns load when needed; their directory
+name does not make them always-loaded. Preserve incident evidence behind links.
 
-```
-CLAUDE.md                     # exactly one line: @AGENTS.md
-AGENTS.md                     # the index — nothing else lives here:
-                              #   1. intent skill-mappings header (a `skills:` list
-                              #      mapping "task" → SKILL.md path in node_modules,
-                              #      generated/refreshed via `npx @tanstack/intent`)
-                              #   2. one @import line per docs/conventions/*.md file
-                              #   3. a "Related docs" list pointing at docs/patterns/
-docs/conventions/*.md         # ONE topic per file (stack, architecture, forms,
-                              #   overlays, data-loading, mutation-feedback, …) —
-                              #   always-loaded via @import; edit the source file,
-                              #   never duplicate content into the index
-docs/patterns/*.md            # load-before-work specs (page-layout, card,
-                              #   table-actions, …) — referenced from the index with
-                              #   a "read X first" trigger table, loaded on demand
-scripts/check-*.ts            # CI guard scripts for every mechanically-checkable
-                              #   convention (type scale, mutation feedback, …) —
-                              #   a convention without a guard is a suggestion
-```
-
-Rules of thumb:
-
-- **CLAUDE.md contains only `@AGENTS.md`** — the index is tool-agnostic; Claude-specific config stays in `.claude/`.
-- **The index imports, it never explains.** Each convention doc owns its topic; the index's job is routing (which doc, when).
-- **Import the project, skill the doctrine.** `docs/conventions/` is for what is specific to *this* repo — its real folder layout, commands, ports, safety rules. Generic blueprint doctrine (the service file contract, state layering, component layers and tokens, auth enforcement) belongs to the `arch-*` skills and loads on demand. Duplicating it into an always-loaded convention doc is what makes an index cost 10k+ tokens on every prompt.
-- **Patterns vs conventions:** conventions are always-on rules (short, imported); patterns are heavyweight specs an agent loads before touching that surface (referenced with an explicit "load before any X work" trigger).
-- **Guard what you can grep.** Every rule that reduces to a grep gets a `scripts/check-*.ts` CI guard and a mention in the convention doc it enforces.
+Read [context routing](./agent-workflows/context-routing.md) for mixed-stack ownership and host
+capability rules. Generic doctrine lives upstream; consumer conventions describe local choices
+and exceptions. Prefer an existing validation tool over a new custom guard.
 
 ## Architecture decisions
 

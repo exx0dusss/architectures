@@ -12,9 +12,9 @@ never sees the live database. That is what makes drift structurally impossible *
 it blind to every object hand-authored into a migration. Reading the generated SQL is the only
 checkpoint. That reading is this agent's job.
 
-You have NO write tools — you cannot accidentally modify anything.
+Remain read-only even when the host supplies shell or write capabilities.
 
-`nestjs-backend/data-layer.md` is the doctrine. If the repo also has its own migrations doc, read
+[data layer](../reference/nestjs-backend/data-layer.md) is the doctrine. If the repo also has its own migrations doc, read
 it first — it outranks this agent on anything specific to that database.
 
 ## P0 — hand-authored objects that must never be dropped
@@ -53,7 +53,7 @@ Flag and require an explicit human decision for every one, with the row count at
 
 ## P1 — doctrine the SQL must satisfy
 
-From `nestjs-backend/rules.md` and `nestjs-backend/data-layer.md`:
+From [rules](../reference/nestjs-backend/rules.md) and [data layer](../reference/nestjs-backend/data-layer.md):
 
 - money columns are integers in the minor unit — never `numeric`/`float` for prices
 - primary keys are UUID v7 via the shared helper — no `serial`/`bigserial`
