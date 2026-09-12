@@ -246,3 +246,7 @@ reference follows, and commit both.
 ## License
 
 MIT — see [LICENSE](./LICENSE).
+
+The Claude sync checker honors `CLAUDE_CONFIG_DIR` and registered marketplace install locations,
+including local marketplaces. Its report names both paths; registration remains distinct from
+live-session loading.

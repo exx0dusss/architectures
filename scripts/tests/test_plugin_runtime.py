@@ -75,7 +75,27 @@ class Sync(unittest.TestCase):
 
     def run_sync(self, *args):
         return subprocess.run(['sh', str(SYNC), '--json', *args], cwd=self.project,
-                              env={**os.environ, 'HOME': str(self.home)}, text=True, capture_output=True)
+                              env={**os.environ, 'HOME': str(self.home), 'CLAUDE_CONFIG_DIR': str(self.home / '.claude')}, text=True, capture_output=True)
+
+    def test_custom_config_and_registered_local_marketplace(self):
+        self.install()
+        custom = self.home / 'custom profile'
+        (self.home / '.claude').rename(custom)
+        local = self.home / 'local marketplace'
+        local.mkdir()
+        (custom / 'plugins/marketplaces/architectures/.claude-plugin').rename(local / '.claude-plugin')
+        self.write(custom / 'plugins/known_marketplaces.json', {
+            'architectures': {'installLocation': str(local), 'source': {'source': 'directory', 'path': str(local)}}})
+        registry = json.loads((custom / 'plugins/installed_plugins.json').read_text())
+        registry['plugins']['arch-core@architectures'][0]['installPath'] = str(custom / 'plugins/cache/architectures/arch-core/1.9.0')
+        self.write(custom / 'plugins/installed_plugins.json', registry)
+        result = subprocess.run(['sh', str(SYNC), '--json', '--strict'], cwd=self.project,
+                                env={**os.environ, 'HOME': str(self.home), 'CLAUDE_CONFIG_DIR': str(custom)},
+                                text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        report = json.loads(result.stdout)
+        self.assertEqual(report['plugins']['arch-core']['state'], 'CURRENT')
+        self.assertEqual(Path(report['marketplaceRoot']), local)
 
     def test_missing_plugin_fails_strict(self):
         result = self.run_sync('--strict')

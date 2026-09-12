@@ -76,13 +76,17 @@ def local_agents(root):
                       and not any(part in ('node_modules', '.worktrees', 'worktrees') for part in path.relative_to(root).parts)))
 
 
-def inspect(root, home, marketplace):
+def inspect(root, home, marketplace, config=None):
+    config = config or home / '.claude'
     name = marketplace.rsplit('/', 1)[-1]
-    settings = read_json(home / '.claude/settings.json').get('enabledPlugins', {}).copy()
+    settings = read_json(config / 'settings.json').get('enabledPlugins', {}).copy()
     for filename in ('settings.json', 'settings.local.json'):
         settings.update(read_json(root / '.claude' / filename).get('enabledPlugins', {}))
-    registry = read_json(home / '.claude/plugins/installed_plugins.json').get('plugins', {})
-    manifest = read_json(home / '.claude/plugins/marketplaces' / name / '.claude-plugin/marketplace.json')
+    registry = read_json(config / 'plugins/installed_plugins.json').get('plugins', {})
+    known = read_json(config / 'plugins/known_marketplaces.json').get(name, {})
+    location = known.get('installLocation')
+    marketplace_root = Path(location).expanduser() if location else config / 'plugins/marketplaces' / name
+    manifest = read_json(marketplace_root / '.claude-plugin/marketplace.json')
     advertised = {plugin['name']: plugin.get('version') for plugin in manifest.get('plugins', [])}
     rows, agents = {}, {}
     for key, enabled in sorted(settings.items()):
@@ -112,7 +116,7 @@ def inspect(root, home, marketplace):
             shadows.append({'agent': local.stem, 'plugin': plugin, 'local': str(local.relative_to(root)),
                             'source': str(source), 'state': 'DUPLICATE' if local.read_bytes() == source.read_bytes() else 'FORK'})
     return {'marketplace': marketplace, 'runtime': 'claude', 'scope': 'effective-project',
-            'project': str(root), 'checkedAt': datetime.now(timezone.utc).isoformat(),
+            'project': str(root), 'configDirectory': str(config), 'marketplaceRoot': str(marketplace_root), 'checkedAt': datetime.now(timezone.utc).isoformat(),
             'plugins': rows, 'shadowedAgents': shadows}
 
 
@@ -132,7 +136,8 @@ def main():
         parser.error('project directory does not exist')
     root = Path(git(root, 'rev-parse', '--show-toplevel') or root).resolve()
     try:
-        report = inspect(root, Path.home(), args.marketplace)
+        config = Path(os.environ['CLAUDE_CONFIG_DIR']).expanduser().resolve() if os.environ.get('CLAUDE_CONFIG_DIR') else Path.home() / '.claude'
+        report = inspect(root, Path.home(), args.marketplace, config)
         if args.write:
             destination = root / '.claude/blueprint-sync.json'
             destination.parent.mkdir(exist_ok=True)

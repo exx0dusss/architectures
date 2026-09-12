@@ -1,6 +1,6 @@
 {
   "name": "arch-core",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "Stack-agnostic architecture doctrine, decision workflow, contribution workflow, and blueprint drift guidance.",
   "author": {
     "name": "exx0dusss",
@@ -18,7 +18,7 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "Architectures — Core Doctrine",
+    "displayName": "Architectures \u2014 Core Doctrine",
     "shortDescription": "Architecture doctrine and workflows",
     "longDescription": "Stack-agnostic architecture skills for services, state, UI, auth, forms, backend modules, decisions, contributions, initialization, and pattern promotion.",
     "developerName": "exx0dusss",
