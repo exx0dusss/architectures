@@ -22,3 +22,9 @@ jobs:
 
       - name: Check advertised versions against plugin manifests
         run: sh scripts/check-plugin-versions.sh
+
+      - name: Check bundled hook transport
+        run: python3 scripts/build-hook-helpers.py --check
+
+      - name: Test plugin runtime contracts
+        run: python3 -m unittest discover -s scripts/tests -v

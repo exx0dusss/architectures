@@ -111,15 +111,17 @@ Report installed versus already present.
 Run the sync check from this plugin:
 
 ```bash
-sh "${CLAUDE_PLUGIN_ROOT}"/scripts/arch-sync-check.sh
+sh "${CLAUDE_PLUGIN_ROOT}"/scripts/arch-sync-check.sh --write
 ```
 
 It answers two questions and writes both to `.claude/blueprint-sync.json`. Commit that file — it
 makes "which blueprint is this repo on" answerable from git rather than from someone's terminal.
 
-1. **Versions** — installed against what the marketplace advertises: `CURRENT`, `BEHIND`,
-   `UNKNOWN`. It reads this project's `enabledPlugins`, so a plugin some *other* repo installed is
-   not counted here.
+1. **Registrations** — effective user/project/local settings and project/worktree installation
+   records, not the highest machine cache. States: `CURRENT`, `BEHIND`, `AHEAD`, `MISSING`,
+   `INVALID`, `UNKNOWN`. `--strict` rejects every non-current registration. The report does not
+   prove live session loading; verify capabilities in a fresh session. The resolver supports
+   Claude only; use a runtime-specific resolver for other hosts rather than inferring parity.
 2. **Shadowing** — project-level `.claude/agents/<name>.md` files that override a plugin agent of
    the same name. Project agents win, so a vendored copy silently disables the plugin's version.
    `DUPLICATE` is byte-identical and safe to delete; `FORK` differs and needs a ruling.

@@ -128,12 +128,24 @@ tokens or component names on another.
 
 Two questions, answered separately, because version equality is not sync.
 
-`arch-core` ships `scripts/arch-sync-check.sh`, which a consumer runs on itself. It reports
-whether each enabled plugin matches the version the marketplace advertises, **and** whether any
-project-level `.claude/agents/<name>.md` shadows a plugin agent of the same name. Project agents
-win, so a vendored copy silently disables the plugin's version — a repo can report every plugin
-`CURRENT` while the plugins do nothing at all. Results land in `.claude/blueprint-sync.json`;
-`--strict` exits non-zero for CI.
+`arch-core` ships `scripts/arch-sync-check.sh`, run inside the consumer checkout. It reads
+Claude's enabled settings and installation registry, resolves project/worktree scope, and checks
+installed manifests against the marketplace. A newer machine cache does not count as a project
+installation. `MISSING`, `INVALID`, `UNKNOWN`, `BEHIND`, and `AHEAD` remain distinct; `--strict`
+fails every non-current registration and every shadowed agent. No requested plugins is an empty
+report, not a fallback to unrelated machine caches.
+
+Inspection is read-only by default (`--check`). Use `--write` deliberately to save
+`.claude/blueprint-sync.json`; `--json` emits structured provenance. The report checks registered
+installations, **not live session loading**. Verify loaded capabilities in a fresh runtime session.
+The resolver currently supports `--runtime claude`; Codex registration needs its own resolver and
+must not be inferred from Claude caches. `--project PATH` selects the consumer checkout.
+
+Hook scripts consume PostToolUse JSON from stdin and return model-visible `additionalContext`.
+The shared transport source is `scripts/hook_reminder.py`; run
+`python3 scripts/build-hook-helpers.py` after editing it. Bundled copies keep each plugin
+self-contained. `python3 -m unittest discover -s scripts/tests -v` covers hook payloads and
+installation resolution; CI also verifies bundle equality. Hooks are advisory, not safety gates.
 
 What a script cannot judge, the `arch-drift` agent does: whether a forked agent is a stale
 ancestor or a real local patch, whether doctrine has been copied into always-loaded conventions,

@@ -1,7 +1,7 @@
 {
   "name": "arch-tanstack-start",
   "displayName": "Architectures \u2014 TanStack Start",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Scaffolding and audit agents for the TanStack Start blueprint: service and page scaffolds, architecture review, colour-token and dependency audits, OpenAPI checks, MSW mocks.",
   "author": {
     "name": "exx0dusss",

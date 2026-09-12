@@ -6,40 +6,40 @@
   },
   "metadata": {
     "description": "Opinionated engineering doctrine and reusable product-building workflows, delivered as Claude Code plugins.",
-    "version": "1.9.0"
+    "version": "1.9.1"
   },
   "plugins": [
     {
       "name": "arch-core",
-      "displayName": "Architectures \u2014 Core Doctrine",
+      "displayName": "Architectures — Core Doctrine",
       "description": "Stack-agnostic architecture skills (services, state, UI, auth, forms, backend modules), the arch-decision ADR workflow, the arch-contribute contribution doctrine, the arch-drift audit, and the init workflow. Required by every stack plugin.",
-      "version": "1.9.0",
+      "version": "1.9.1",
       "source": "./plugins/arch-core"
     },
     {
       "name": "arch-nextjs",
-      "displayName": "Architectures \u2014 Next.js",
+      "displayName": "Architectures — Next.js",
       "description": "Scaffolding and audit agents for the Next.js App Router blueprint.",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "source": "./plugins/arch-nextjs"
     },
     {
       "name": "arch-tanstack-start",
-      "displayName": "Architectures \u2014 TanStack Start",
+      "displayName": "Architectures — TanStack Start",
       "description": "Scaffolding and audit agents for the TanStack Start blueprint.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "source": "./plugins/arch-tanstack-start"
     },
     {
       "name": "arch-nestjs-backend",
-      "displayName": "Architectures \u2014 NestJS Backend",
+      "displayName": "Architectures — NestJS Backend",
       "description": "The NestJS DDD modular-monolith blueprint, with module scaffolding, audit agents, doctrine hooks, and a settings template.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "source": "./plugins/arch-nestjs-backend"
     },
     {
       "name": "product-design",
-      "displayName": "Architectures \u2014 Product Design",
+      "displayName": "Architectures — Product Design",
       "description": "Product prototyping skill, visual-language doctrine, and rendered-page design review for high-fidelity application UI.",
       "version": "1.1.0",
       "source": "./plugins/product-design"

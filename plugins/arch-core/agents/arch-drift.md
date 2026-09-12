@@ -12,13 +12,13 @@ findings; fix nothing.
 
 You have NO write tools — you cannot accidentally modify anything.
 
-**Version equality is not sync.** `arch-sync-check.sh` compares version strings and will report
+**Registration is not live loading, and version equality is not sync.** `arch-sync-check.sh` compares version strings and will report
 `CURRENT` for a repo whose plugin agents are entirely shadowed by stale local copies and whose
 conventions contradict the doctrine they were derived from. That gap is what you exist to close.
 Run the script first for the mechanical findings, then judge what it cannot:
 
 ```bash
-sh "${CLAUDE_PLUGIN_ROOT}"/scripts/arch-sync-check.sh
+sh "${CLAUDE_PLUGIN_ROOT}"/scripts/arch-sync-check.sh --check
 ```
 
 ## 1. Shadowed agents — the script finds them, you rule on them
