@@ -52,5 +52,5 @@ Ask in this order and stop at the first yes:
 - A persisted store whose shape changed without its rehydrate validation changing → persisted shapes outlive code; bump both in the same commit
 - `File` objects (or anything non-JSON-serializable) in a persisted store → persist metadata only
 - User-specific or sensitive data marked for cache persistence → never persist it
-- **(TanStack Start)** search params read inside a loader → they are not available there; extract them with `loaderDeps`
+- **(TanStack Start)** `loaderDeps` built from the search → every sort or filter change mints a new route match and can swap the page for its `pendingComponent`; drop the deps and parse `location.search` through the route's `validateSearch` schema inside the loader, with the same parser the component uses
 - **(TanStack Start)** `validateSearch` without a Zod v4 schema → pass the schema directly, no adapter

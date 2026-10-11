@@ -100,6 +100,8 @@ const { data } = useSuspenseQuery(searchQueryOptions(deferredQuery));
 
 The Suspense boundary shows the skeleton on *first* load; the opacity fade handles subsequent refetches without flicker. Pair with `placeholderData: keepPreviousData` on the query options.
 
+When the params live in the URL, the route must not key `loaderDeps` on them — a new route match per change replaces the whole page with its `pendingComponent` before any of this runs. The loader parses `location.search` through the route's `validateSearch` schema instead (rules.md rule 18, ADR-0015).
+
 ## Anti-patterns
 
 - `if (isLoading) return <Spinner />` — move loading into a Suspense fallback.

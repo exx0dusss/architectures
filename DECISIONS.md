@@ -10,6 +10,7 @@ rejected on the way. A doc without its decision is a rule nobody can safely undo
 
 | ID | Date | Decision | Status | Links |
 |----|------|----------|--------|-------|
+| [0015](./decisions/0015-decode-search-in-the-loader.md) | 2026-10-11 | Decode a route's search inside its loader instead of keying loaderDeps on it | Accepted | `tanstack-start/rules.md` |
 | [0014](./decisions/0014-load-conventions-by-task.md) | 2026-09-12 | Load conventions by task and owning workspace | Accepted | supersedes 0004 |
 | [0013](./decisions/0013-expand-beyond-architecture.md) | 2026-09-04 | Expand marketplace from architecture blueprints to engineering playbook collections | Accepted | `product-design/`, `plugins/product-design/` |
 | [0012](./decisions/0012-admit-agents-on-generality.md) | 2026-08-20 | Admit an agent or skill on generality, not on a second consumer | Accepted | `plugins/arch-core/skills/promote-pattern/SKILL.md` |
