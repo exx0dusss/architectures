@@ -238,12 +238,45 @@ export class NotificationConsumer extends WorkerHost {
       case 'send-telegram-user':
         await this.telegramService.sendToUser(job.data);
         break;
+      default:
+        // An unknown name is a producer/worker version skew, not a no-op.
+        throw new Error(`Unknown job ${job.name} on queue notification`);
     }
   }
 }
 ```
 
-Consumers run in the `worker.ts` process, not the HTTP process.
+Consumers run in the `worker.ts` process, not the HTTP process. **A job name the worker does not
+know fails loudly** — a silent `switch` fall-through completes the job, so the producer believes
+the work happened and nothing records that it did not.
+
+### Queued runs for work that scales with rows
+
+Anything whose cost grows with the number of rows — an import, an export, a bulk rewrite, a
+rollback — is a **run on a worker**, never work inside the request or in the browser. A long
+request is cut off by a proxy timeout or a closed tab part-way through, with no record of how far
+it got.
+
+1. **The request validates, stores, records and enqueues.** It validates the input, stores the
+   uploaded bytes in object storage, writes the run row, enqueues the step and answers `202` with
+   the run. Parsing, planning, writing and building a file happen only in the worker. Fixed-cost
+   work with no rows (an empty template) may stay a direct response.
+2. **A run is one row with an explicit status machine** for its whole life — queued, planning,
+   awaiting input, ready, applying, terminal success/partial/error, cancelled, rolling back. Whether
+   a step waits for a worker or runs in one is a `claimed_at` column, not a status of its own.
+3. **Every transition is a conditional write** on the status (and revision, when the run carries
+   one) that the writer read: `UPDATE … WHERE id = $1 AND status = $2 AND revision = $3`, and zero
+   rows updated means someone else moved it. The API, the worker and the reaper then never
+   overwrite one another, and a plan superseded by newer input writes nothing.
+4. **Progress is a heartbeat that persists state.** The write loop flushes its row count and any
+   undo snapshots every few hundred rows, so a run whose worker dies mid-way can still be reported
+   and rolled back.
+5. **A reaper fails stuck runs.** A step queued past a threshold with no worker or no job, or a
+   claimed step with no heartbeat past another threshold, moves to `error` with a reason
+   (`worker_unavailable`, `timed_out`). The API may apply the same rules to the run it is polled
+   about, so a client never waits on a run nobody will finish.
+6. **Give long runs their own queue** with its own concurrency, so a long apply never waits behind
+   unrelated scheduled jobs, or the other way round.
 
 ## Global exception filter
 
