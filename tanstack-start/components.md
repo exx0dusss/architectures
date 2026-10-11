@@ -301,6 +301,27 @@ Plus three semantic-only roles (hand-applied, no raw-size equivalent):
 - Roles bundle size + line-height only; color is a separate token, weight overrides (`font-semibold`) are allowed.
 - **CI guard:** back the convention with a check script (e.g. `scripts/check-type-scale.ts`, run as `bun scripts/check-type-scale.ts` in CI) that greps `src/` for reintroduced raw sizes and fails the build.
 
+### Design-system lint (`@shadcn/lint`)
+
+`@shadcn/lint` turns the token and variant rules above into lint errors — a restyled component,
+a raw colour, an arbitrary value, an inline style, an unknown class — and each error names the
+variant, size or token to use instead. Adopting it on an existing app:
+
+- **Freeze the findings that exist at adoption, so only new ones fail.** On ESLint use its bulk
+  suppressions file; elsewhere pin per-file counts and fail when a count rises. A rule that is red
+  on every branch on day one is a rule everyone merges past.
+- **A deliberate exception is an inline disable with a reason** —
+  `// eslint-disable-next-line shadcn/<rule> -- <why>` — never a new baseline entry.
+- **Prune the baseline after fixing a finding**, in the same commit, so the freed slot cannot
+  absorb the next one. **Never regenerate the baseline to make lint pass.**
+- **On Biome, run Oxlint for these rules only.** Biome cannot host JS plugins; Oxlint can, and
+  Biome keeps every other rule.
+- **Audit the frozen findings; a baseline is not a verdict.** Sort each into *bug* (renders wrong
+  today — a class that generates no CSS), *drift* (works, departs from the system with no visible
+  reason), *decision* (repeated or structural — the system lacks a variant or token someone must
+  add) and *deliberate* (the rule's premise does not hold — a runtime width, a fixed brand colour).
+  Fix bugs and drift; route decisions to whoever owns the system; disable deliberate ones inline.
+
 ### Text overflow
 
 `truncate` is `overflow-hidden text-ellipsis whitespace-nowrap` — three declarations that do
