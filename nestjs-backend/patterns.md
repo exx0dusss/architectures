@@ -278,6 +278,24 @@ it got.
 6. **Give long runs their own queue** with its own concurrency, so a long apply never waits behind
    unrelated scheduled jobs, or the other way round.
 
+### One Redis, many worktrees
+
+When parallel worktrees share one local Redis, every worker listens on BullMQ's default `bull`
+prefix, so a worker left running in one worktree claims another worktree's jobs and runs them on
+different code. Give each worktree its own prefix from env, and read it everywhere a queue or
+worker is built — the module root and any hand-run script that enqueues:
+
+```typescript
+BullModule.forRoot({
+  connection: { url: env.REDIS_URL },
+  prefix: env.BULLMQ_PREFIX, // `bull` by default; `bull-<worktree>` in a worktree
+})
+```
+
+Worktree setup writes the prefix next to the worktree's other derived values (ports, cookie
+names). The main checkout and deployed environments keep the default, so their existing queues
+stay readable. A prefix change only takes effect once that worktree's API and worker restart.
+
 ## Global exception filter
 
 All unhandled exceptions pass through a single filter that produces a standardized response:
