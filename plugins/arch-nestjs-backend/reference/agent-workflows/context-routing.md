@@ -20,6 +20,12 @@ matches, regardless of whether the document lives in conventions/ or patterns/. 
 expand content; splitting imports does not lower context load. Other runtimes must explicitly
 follow the pointers they need rather than assume Claude import behavior.
 
+## Verification scope
+
+Verify what changed, not the whole repository, after each turn: follow
+[scoped verification](scoped-verification.md). Full suites belong at the tip of a stack or on
+request, unless the owning workspace's own conventions say otherwise.
+
 ## Runtime and installation boundaries
 
 A skill is a workflow, not proof that a named agent, connector, or hook is available. Check actual

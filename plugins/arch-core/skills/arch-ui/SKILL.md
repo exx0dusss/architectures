@@ -75,6 +75,8 @@ read those instead — a consumer's local instantiation outranks the blueprint.
 - `truncate` on a child of a centred column (`flex flex-col items-center`) or inside a flex/grid cell with no `min-w-0` → nothing bounds its width, so it never ellipses and the text spills out both sides. See the text-overflow section of the stack's `components.md`
 - A UI primitive imported from anywhere but `components/ui/` → fix the import
 - **(TanStack Start)** `asChild` on `Button` → Base UI uses the `render` prop: `<Button render={<Link to="/" />} nativeButton={false}>`
+- **(TanStack Start)** A lint baseline regenerated to make design-system lint pass → fix the finding or disable it inline with a reason; prune the baseline only after fixes. See the design-system lint section of `components.md`
+- **(TanStack Start)** A hand-sized skeleton bar standing in for a button, field, select, avatar or text line → use the shaped skeleton that reads the component's own box variants. See the shaped-skeletons section of `building-blocks/data-loading.md`
 - A primary scroll container hides its native scrollbar without a persistent replacement cue → keep
   the platform affordance or add an equivalent.
 - A scroll edge uses a static fade/mask → make edge state position-aware and boundary-safe.

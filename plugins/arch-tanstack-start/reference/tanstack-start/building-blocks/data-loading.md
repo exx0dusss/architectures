@@ -31,6 +31,29 @@ Rules:
 - `prefers-reduced-motion` drops the band automatically.
 - **Never** inline `bg-muted animate-pulse` divs.
 
+### Shaped skeletons
+
+A placeholder for a button, a field, a select trigger, an avatar or a line of text is a **shaped
+skeleton**, not a hand-sized bar:
+
+```tsx
+<ButtonSkeleton size="sm" className="w-24" />  // same `size` as <Button size="sm">
+<InputSkeleton />                               // full-width field, like <Input>
+<SelectSkeleton size="sm" className="w-40" />   // a trigger's corners are not an input's
+<AvatarSkeleton size="lg" />                    // same `size` as <Avatar size="lg">
+<TextSkeleton text="body" className="w-48" />   // one line box of that type role
+```
+
+- Each takes the real component's `size` and reads its box geometry from the component's own
+  file — export the box variants (height, radius, padding) beside the component's CVA config — so
+  resizing the component resizes its skeleton.
+- Width stays the caller's; that is layout, not the component's box.
+- A story renders every component beside its skeleton and fails when the measured boxes differ.
+  Without it the pairs drift silently.
+- Hand-sized bars drift: they settle on heights no component has, and the layout jumps when data
+  arrives.
+- Plain `Skeleton` stays for shapes no component owns — a chart, an image, a one-off block.
+
 ## Marks vs skeletons
 
 A skeleton claims "content of this shape is coming". Where that claim would be a lie, use a **mark** instead. There are exactly three:
@@ -99,6 +122,8 @@ const { data } = useSuspenseQuery(searchQueryOptions(deferredQuery));
 ```
 
 The Suspense boundary shows the skeleton on *first* load; the opacity fade handles subsequent refetches without flicker. Pair with `placeholderData: keepPreviousData` on the query options.
+
+When the params live in the URL, the route must not key `loaderDeps` on them — a new route match per change replaces the whole page with its `pendingComponent` before any of this runs. The loader parses `location.search` through the route's `validateSearch` schema instead (rules.md rule 18, ADR-0015).
 
 ## Anti-patterns
 

@@ -56,7 +56,7 @@ Rules that must NEVER be broken. Violating these causes bugs, security issues, o
 
 17. **Use `validateSearch` with Zod v4 for search params.** Pass a Zod schema directly (no adapter needed): `validateSearch: z.object({ page: z.number().default(1).catch(1) })`.
 
-18. **Use `loaderDeps` when loaders depend on search params.** Extract deps explicitly: `loaderDeps: ({ search }) => ({ page: search.page })`. Search params are NOT available directly in loaders.
+18. **Never key `loaderDeps` on the search; decode the search inside the loader.** A match id is the route id, its interpolated path and its `loaderDeps`, so search-keyed deps mint a new match on every sort or filter change. A new match starts pending, and past `defaultPendingMs` the router swaps the whole leaf — toolbar included — for the route's `pendingComponent`; the deferred params and section `Suspense` inside it never get a say. Without deps the match stays mounted and the loader re-runs as a background revalidation. The loader receives `location`, but `location.search` is the raw parsed URL, so run it through the route's own `validateSearch` schema: `loader: ({ context, location }) => { void context.queryClient.prefetchQuery(listQuery(listSearch.parse(location.search))) }`. The component reads the search through the same schema, so loader and component land on one query key. `loaderDeps` stays legitimate for non-search keys. (ADR-0015)
 
 19. **Use `useSuspenseQuery` in components with loaders.** When the route loader calls `ensureQueryData`, the component should use `useSuspenseQuery` (data guaranteed available).
 

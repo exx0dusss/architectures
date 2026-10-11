@@ -99,7 +99,7 @@ for stack in tanstack-start nestjs-backend; do
     rm -rf "$target"
     mkdir -p "$target/agent-workflows"
     cp -R "$CORE_DEST/$stack" "$target/$stack"
-    cp "$ROOT/agent-workflows/context-routing.md" "$target/agent-workflows/"
+    cp "$ROOT"/agent-workflows/*.md "$target/agent-workflows/"
 done
 
 if [ "$CHECK" -eq 1 ]; then

@@ -40,14 +40,19 @@ import { ThingsTable } from './-components/things-table'
 import { thingQueryOptions } from '~/services/things/things.query-options'
 import { TableSkeleton } from '~/components/crm/skeleton'
 
+const thingsSearch = z.object({
+  page: z.number().optional().default(1),
+  q: z.string().optional(),
+})
+
 export const Route = createFileRoute('/_authed/things/')({
-  validateSearch: z.object({
-    page: z.number().optional().default(1),
-    q: z.string().optional(),
-  }),
-  loaderDeps: ({ search }) => search,
-  loader: ({ context, deps }) => {
-    context.queryClient.ensureQueryData(thingQueryOptions.list(deps))
+  validateSearch: thingsSearch,
+  // No `loaderDeps`: search-keyed deps mint a new match on every filter change,
+  // and a pending match swaps the whole page for its pendingComponent.
+  // `location.search` is raw, so it goes through the route's own schema — the
+  // same parser the table uses, so both land on one query key.
+  loader: ({ context, location }) => {
+    void context.queryClient.prefetchQuery(thingQueryOptions.list(thingsSearch.parse(location.search)))
   },
   component: ThingsPage,
   head: () => ({

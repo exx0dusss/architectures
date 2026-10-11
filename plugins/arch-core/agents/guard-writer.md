@@ -56,6 +56,29 @@ literal `import('bun')`. Vite statically resolves literal dynamic-import specifi
 time, which breaks a Vitest run under Node. Where a guard carries a comment explaining this,
 preserve it when porting — deleting it is how the bug comes back.
 
+## Ratchets and baselines
+
+When the rule already has violations, a fatal guard is red on every branch and trains everyone to
+merge past red. Ship a **ratchet** instead: pin the current violations and fail only on new ones.
+
+- **Pin a set of paths, not a count.** Fix one violation and introduce another in the same change
+  and a count does not move — the substitution passes silently. A set fails and can name the file.
+  A count is enough only when one violation is interchangeable with another.
+- **Fail in both directions.** A pinned entry that no longer violates means someone fixed it; the
+  pin comes down in the same commit, or the freed slot hides the next regression.
+- **An empty pin is the fatal rule.** Once the pin is empty, any violation is a rise, so the
+  ratchet becomes the rule with no flag to flip.
+- **Never regenerate a baseline to go green.** The re-pin command exists to shrink the pin after
+  fixes. Re-pinning to absorb a new violation, or growing an ignore list to hold real findings,
+  turns the guard into maintenance that covers rot.
+- **A guard that measures nothing exits non-zero.** An empty source directory, a missing config
+  or a glob that stopped matching makes every check vacuously true. Fail on zero inputs — a guard
+  that passes vacuously is worse than one that is red.
+- **Count what a compiler actually compiled.** A tsconfig whose `include` stops matching compiles
+  the smaller program and exits 0. A typecheck guard compares the program's files against the
+  files on disk and fails on a shortfall; the same holds for a task runner's filter or a test
+  runner that passes with no tests.
+
 ## Wire it up
 
 - Add the script to the workspace's `package.json`.

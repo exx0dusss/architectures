@@ -42,7 +42,7 @@ per-stack sections below — a skill is never a second copy of doctrine.
 | arch-contribute | `plugins/arch-core/skills/arch-contribute/SKILL.md` | stable | ADR-0008, ADR-0010 |
 | arch-init | `plugins/arch-core/skills/arch-init/SKILL.md` | stable | ADR-0005 |
 | arch-services | `plugins/arch-core/skills/arch-services/SKILL.md` | stable | ADR-0005 |
-| arch-state | `plugins/arch-core/skills/arch-state/SKILL.md` | stable | ADR-0005 |
+| arch-state | `plugins/arch-core/skills/arch-state/SKILL.md` | stable | ADR-0005, ADR-0015 |
 | arch-ui | `plugins/arch-core/skills/arch-ui/SKILL.md` | stable | ADR-0005 |
 | arch-auth | `plugins/arch-core/skills/arch-auth/SKILL.md` | stable | ADR-0005 |
 | arch-forms | `plugins/arch-core/skills/arch-forms/SKILL.md` | stable | ADR-0005 |
@@ -105,7 +105,7 @@ available when working here and invisible to anyone who installs a plugin.
 | migration | `tanstack-start/migration.md` | stable | — |
 | patterns | `tanstack-start/patterns.md` | stable | ADR-0002 |
 | plugins | `tanstack-start/plugins.md` | stable | — |
-| rules | `tanstack-start/rules.md` | stable | — |
+| rules | `tanstack-start/rules.md` | stable | ADR-0015 |
 | services | `tanstack-start/services.md` | stable | — |
 | state | `tanstack-start/state.md` | stable | — |
 | structure | `tanstack-start/structure.md` | stable | — |
@@ -115,7 +115,7 @@ available when working here and invisible to anyone who installs a plugin.
 | Pattern | File | Status | Decisions |
 |---------|------|--------|-----------|
 | auth | `tanstack-start/building-blocks/auth.md` | stable | — |
-| data-loading | `tanstack-start/building-blocks/data-loading.md` | stable | — |
+| data-loading | `tanstack-start/building-blocks/data-loading.md` | stable | ADR-0015 |
 | enumeration-controls | `tanstack-start/building-blocks/enumeration-controls.md` | stable | — |
 | errors-and-result | `tanstack-start/building-blocks/errors-and-result.md` | stable | — |
 | fetch-client | `tanstack-start/building-blocks/fetch-client.md` | stable | — |
@@ -143,7 +143,7 @@ available when working here and invisible to anyone who installs a plugin.
 | i18n-sync | `plugins/arch-tanstack-start/agents/i18n-sync.md` | stable | — |
 | msw-mock | `plugins/arch-tanstack-start/agents/msw-mock.md` | stable | — |
 | openapi-check | `plugins/arch-tanstack-start/agents/openapi-check.md` | stable | — |
-| page-scaffold | `plugins/arch-tanstack-start/agents/page-scaffold.md` | stable | — |
+| page-scaffold | `plugins/arch-tanstack-start/agents/page-scaffold.md` | stable | ADR-0015 |
 | service-scaffold | `plugins/arch-tanstack-start/agents/service-scaffold.md` | stable | — |
 | suspense-audit | `plugins/arch-tanstack-start/agents/suspense-audit.md` | stable | — |
 | unit-test | `plugins/arch-tanstack-start/agents/unit-test.md` | stable | — |
@@ -242,3 +242,4 @@ so it holds for one stack and must not be routed to the others.
 | Pattern | Source | Decisions |
 |---|---|---|
 | Task-scoped conventions and owning-workspace detection | [Context routing](./agent-workflows/context-routing.md) | [0014](./decisions/0014-load-conventions-by-task.md) |
+| Scoped verification and one heavy job at a time | [Scoped verification](./agent-workflows/scoped-verification.md) | — |
