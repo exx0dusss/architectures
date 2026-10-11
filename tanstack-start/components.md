@@ -311,7 +311,8 @@ variant, size or token to use instead. Adopting it on an existing app:
   suppressions file; elsewhere pin per-file counts and fail when a count rises. A rule that is red
   on every branch on day one is a rule everyone merges past.
 - **A deliberate exception is an inline disable with a reason** —
-  `// eslint-disable-next-line shadcn/<rule> -- <why>` — never a new baseline entry.
+  `// eslint-disable-next-line shadcn/<rule> -- <why>`, or Oxlint's equivalent — never a new
+  baseline entry.
 - **Prune the baseline after fixing a finding**, in the same commit, so the freed slot cannot
   absorb the next one. **Never regenerate the baseline to make lint pass.**
 - **On Biome, run Oxlint for these rules only.** Biome cannot host JS plugins; Oxlint can, and

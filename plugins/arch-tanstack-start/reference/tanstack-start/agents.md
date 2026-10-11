@@ -4,6 +4,12 @@ Specialized Claude Code agents that automate repetitive work and enforce archite
 
 Agent definitions ship in the `arch-tanstack-start` plugin (`plugins/arch-tanstack-start/agents/`). Project-local agents still go in `.claude/agents/` at the project root.
 
+## Verifying agent output
+
+Agents check the change they made, not the whole app: changed-file lint and related tests per
+turn, an incremental whole-program typecheck before pushing, never a per-file `tsc`. See
+[scoped verification](../agent-workflows/scoped-verification.md).
+
 ## Scaffolding agents
 
 ### service-scaffold
