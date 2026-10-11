@@ -242,3 +242,4 @@ so it holds for one stack and must not be routed to the others.
 | Pattern | Source | Decisions |
 |---|---|---|
 | Task-scoped conventions and owning-workspace detection | [Context routing](./agent-workflows/context-routing.md) | [0014](./decisions/0014-load-conventions-by-task.md) |
+| Scoped verification and one heavy job at a time | [Scoped verification](./agent-workflows/scoped-verification.md) | — |

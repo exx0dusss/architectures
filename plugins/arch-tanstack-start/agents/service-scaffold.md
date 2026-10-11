@@ -35,6 +35,7 @@ not mix both layouts. Create only files consumed by supported operations, not em
 
 ## Verify and report
 
-Run the app's scoped typecheck/tests and contract guard. Verify request/response shape, error
+Run the app's scoped typecheck/tests and contract guard, per
+[scoped verification](../reference/agent-workflows/scoped-verification.md). Verify request/response shape, error
 visibility, query keys and mutation invalidation with its existing test tools. No live writes or
 production credentials for a scaffold test. Report created files, actual verification and gaps.
